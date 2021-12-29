@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'omikuji2021',
       home: MainPage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
