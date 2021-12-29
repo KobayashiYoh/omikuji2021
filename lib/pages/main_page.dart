@@ -29,6 +29,12 @@ class _MainPageState extends State<MainPage> {
   late String _fortune;
   late Future<Translation> _message;
 
+  TextStyle _fortuneTextStyle = TextStyle(
+    fontSize: 30.0,
+    fontFamily: 'YujiSyuku',
+    color: Colors.red,
+  );
+
   // 乱数から運勢を決定
   void _generateFortune() {
     var rand = new math.Random();
@@ -56,7 +62,7 @@ class _MainPageState extends State<MainPage> {
     else if (fortuneId > 10) {
       _fortune = _fortuneList[6];
     }
-    else if (fortuneId > 1) {
+    else if (fortuneId > 0) {
       _fortune = _fortuneList[7];
     }
     else if (fortuneId == 0) {
@@ -75,13 +81,38 @@ class _MainPageState extends State<MainPage> {
     return generatedWord;
   }
 
+  // テキストスタイルを初期化
+  void _initTextStyle() {
+    setState(() {
+      _fortuneTextStyle = TextStyle(
+        fontSize: 30.0,
+        fontFamily: 'YujiSyuku',
+        color: Colors.transparent,
+      );
+    });
+  }
+
+  // テキストスタイルを変更
+  void _changeTextStyle() {
+    setState(() {
+      _fortuneTextStyle = TextStyle(
+        fontSize: 30.0,
+        fontFamily: 'YujiSyuku',
+        color: Colors.black,
+      );
+    });
+  }
+
   // おみくじを引く
-  void _reload () {
+  Future<void> _reload() async {
+    _initTextStyle();
     setState(() {
       print('\n--- おみくじを引く ---');
       _generateFortune();
       _message = _wordGenerate();
     });
+    await Future.delayed(Duration(seconds: 3));
+    _changeTextStyle();
   }
 
   @override
@@ -120,12 +151,10 @@ class _MainPageState extends State<MainPage> {
                       if (snapshot.hasData) {
                         print(snapshot.data);
                         children = [
-                          Text(
-                            '$_fortune\n\n二〇二二年は\n「${snapshot.data.toString()}」\nな一年になるでしょう',
-                            style: TextStyle(
-                              fontSize: 30.0,
-                              fontFamily: 'YujiSyuku',
-                            ),
+                          AnimatedDefaultTextStyle(
+                            child: Text('$_fortune\n\n二〇二二年は\n「${snapshot.data.toString()}」\nな一年になるでしょう'),
+                            style: _fortuneTextStyle,
+                            duration: Duration(seconds: 3),
                           ),
                         ];
                       }
