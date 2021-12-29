@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 import 'package:translator/translator.dart';
@@ -21,6 +22,7 @@ class _MainPageState extends State<MainPage> {
     '凶',
     '大凶',
     '沼',
+    '印刷ミス',
   ];
   final _translator = GoogleTranslator();
   late String _englishWord;
@@ -31,6 +33,7 @@ class _MainPageState extends State<MainPage> {
   void _generateFortune() {
     var rand = new math.Random();
     int fortuneId = rand.nextInt(100);
+    print('Fortune ID: $fortuneId');
 
     if (fortuneId == 99) {
       _fortune = _fortuneList[0];
@@ -38,27 +41,31 @@ class _MainPageState extends State<MainPage> {
     else if (fortuneId > 90) {
       _fortune = _fortuneList[1];
     }
-    else if (fortuneId > 80) {
+    else if (fortuneId > 74) {
       _fortune = _fortuneList[2];
     }
-    else if (fortuneId > 65) {
+    else if (fortuneId > 58) {
       _fortune = _fortuneList[3];
     }
-    else if (fortuneId > 50) {
+    else if (fortuneId > 42) {
       _fortune = _fortuneList[4];
     }
-    else if (fortuneId > 35) {
+    else if (fortuneId > 26) {
       _fortune = _fortuneList[5];
     }
-    else if (fortuneId > 20) {
+    else if (fortuneId > 10) {
       _fortune = _fortuneList[6];
     }
-    else if (fortuneId > 10) {
+    else if (fortuneId > 1) {
       _fortune = _fortuneList[7];
     }
     else if (fortuneId == 0) {
       _fortune = _fortuneList[8];
     }
+    else {
+      _fortune = _fortuneList[9];
+    }
+    print(_fortune);
   }
 
   Future<Translation> _wordGenerate() async {
@@ -71,6 +78,7 @@ class _MainPageState extends State<MainPage> {
   // おみくじを引く
   void _reload () {
     setState(() {
+      print('\n--- おみくじを引く ---');
       _generateFortune();
       _message = _wordGenerate();
     });
@@ -79,15 +87,20 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    _generateFortune();
-    _message = _wordGenerate();
+    _reload();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('おみくじアプリ'),
+        backgroundColor: Colors.indigo[900],
+        title: const Text(
+          'おみくじアプリ',
+          style: TextStyle(
+            fontFamily: 'YujiSyuku',
+          ),
+        ),
       ),
       body: SafeArea(
         child: Container(
@@ -97,48 +110,56 @@ class _MainPageState extends State<MainPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Container(),
-              FutureBuilder(
-                future: _message,
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  List<Widget> children = [];
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    if (snapshot.hasData) {
-                      children = [
-                        Text(
-                          '$_fortune\n\n2022年は\n「${snapshot.data.toString()}」\nな一年になるでしょう',
-                          style: TextStyle(
-                            fontSize: 30.0,
+              Container(
+                height: 250.0,
+                child: FutureBuilder(
+                  future: _message,
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    List<Widget> children = [];
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.hasData) {
+                        print(snapshot.data);
+                        children = [
+                          Text(
+                            '$_fortune\n\n二〇二二年は\n「${snapshot.data.toString()}」\nな一年になるでしょう',
+                            style: TextStyle(
+                              fontSize: 30.0,
+                              fontFamily: 'YujiSyuku',
+                            ),
                           ),
-                        ),
-                      ];
+                        ];
+                      }
+                      else if (snapshot.hasError) {
+                        children = [
+                          Text(snapshot.error.toString()),
+                        ];
+                      }
                     }
-                    else if (snapshot.hasError) {
+                    else {
                       children = [
-                        Text(snapshot.error.toString()),
+                        CupertinoActivityIndicator(),
                       ];
                     }
-                  }
-                  else {
-                    children = [
-                      CircularProgressIndicator(),
-                    ];
-                  }
-                  return Center(
-                    child: Column(
-                      children: children,
-                    ),
-                  );
-                },
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: children,
+                      ),
+                    );
+                  },
+                ),
               ),
               FlatButton(
                 onPressed: _reload,
-                color: Colors.blue,
+                color: Colors.indigo[900],
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: const Text(
                     'おみくじを引く',
                     style: TextStyle(
                       color: Colors.white,
+                      fontFamily: 'YujiSyuku',
+                      fontSize: 20.0,
                     ),
                   ),
                 ),
