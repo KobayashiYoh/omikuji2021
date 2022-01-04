@@ -12,6 +12,11 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+
+  // 進行に関するフィールド
+  int _numberOfDraws = 0;
+
+  // メッセージ生成に関するフィールド
   final _fortuneList = [
     '豪運',
     '大吉',
@@ -25,15 +30,38 @@ class _MainPageState extends State<MainPage> {
     '印刷ミス',
   ];
   final _translator = GoogleTranslator();
-  late String _englishWord;
-  late String _fortune;
-  late Future<Translation> _message;
+  late Future<Translation> _futureMessage;
+  String _generatedEnglishWord = '';
+  String _fortune = '';
+  String _message = '';
 
-  TextStyle _fortuneTextStyle = TextStyle(
-    fontSize: 30.0,
-    fontFamily: 'YujiSyuku',
-    color: Colors.red,
-  );
+  // UIに関するフィールド
+  static const String yujiSyuku = 'YujiSyuku';
+  double _fortuneOpacity = 0;
+  double _messageOpacity = 0;
+  String _buttonText = 'おみくじを引く';
+
+  // opacityを透明に初期化
+  void _initOpacity() {
+    setState(() {
+      _fortuneOpacity = 0;
+      _messageOpacity = 0;
+    });
+  }
+
+  // _fortuneのopacityを変更
+  void _changeFortuneOpacity() {
+    setState(() {
+      _fortuneOpacity = 1.0;
+    });
+  }
+
+  // _messageのopacityを変更
+  void _changeMessageOpacity() {
+    setState(() {
+      _messageOpacity = 1.0;
+    });
+  }
 
   // 乱数から運勢を決定
   void _generateFortune() {
@@ -74,51 +102,65 @@ class _MainPageState extends State<MainPage> {
     print(_fortune);
   }
 
-  Future<Translation> _wordGenerate() async {
-    _englishWord = WordPair.random().asSnakeCase.replaceAll('_', ' ');
-    print(_englishWord);
-    Future<Translation> generatedWord = _translator.translate(_englishWord, from: 'en', to: 'ja');
+  // ボタンのテキストを変更
+  void _changeButtonText() {
+    if (_numberOfDraws % 1000 == 0) {
+      _buttonText = '楽しんでくれてありがとう';
+    }
+    else if (_numberOfDraws % 777 == 0) {
+      _buttonText = 'おしょくじを引き直す';
+    }
+    else if (_numberOfDraws % 100 == 0) {
+      _buttonText = 'まだ引くの？';
+    }
+    else if (_numberOfDraws % 77 == 0) {
+      _buttonText = 'おくみじを引き直す';
+    }
+    else if (_numberOfDraws % 50 == 0) {
+      _buttonText = 'おじくみを引き直す';
+    }
+    else if (_numberOfDraws % 20 == 0) {
+      _buttonText = 'おみくじをもっと引いちゃう';
+    }
+    else if (_numberOfDraws > 0) {
+      _buttonText = 'おみくじを引き直す';
+    }
+
+    setState(() {
+      _buttonText = _buttonText;
+    });
+  }
+
+  // 英単語を生成して日本語に翻訳
+  Future<Translation> _generateWord() async {
+    _generatedEnglishWord = WordPair.random().asSnakeCase.replaceAll('_', ' ');
+    Future<Translation> generatedWord = _translator.translate(_generatedEnglishWord, from: 'en', to: 'ja');
+    print(_generatedEnglishWord);
     return generatedWord;
   }
 
-  // テキストスタイルを初期化
-  void _initTextStyle() {
-    setState(() {
-      _fortuneTextStyle = TextStyle(
-        fontSize: 30.0,
-        fontFamily: 'YujiSyuku',
-        color: Colors.transparent,
-      );
-    });
-  }
-
-  // テキストスタイルを変更
-  void _changeTextStyle() {
-    setState(() {
-      _fortuneTextStyle = TextStyle(
-        fontSize: 30.0,
-        fontFamily: 'YujiSyuku',
-        color: Colors.black,
-      );
-    });
-  }
-
   // おみくじを引く
-  Future<void> _reload() async {
-    _initTextStyle();
+  Future<void> _drawAnOmikuji() async {
+    _numberOfDraws++;
+    print('\n--- おみくじ（$_numberOfDraws回目） ---');
+    _initOpacity();
     setState(() {
-      print('\n--- おみくじを引く ---');
       _generateFortune();
-      _message = _wordGenerate();
+      _futureMessage = _generateWord();
     });
+
+    await Future.delayed(Duration(seconds: 2));
+    _changeFortuneOpacity();
+    _changeMessageOpacity();
+
     await Future.delayed(Duration(seconds: 3));
-    _changeTextStyle();
+    _changeButtonText();
   }
 
   @override
   void initState() {
     super.initState();
-    _reload();
+    _futureMessage = _generateWord();
   }
 
   @override
@@ -129,7 +171,7 @@ class _MainPageState extends State<MainPage> {
         title: const Text(
           'おみくじアプリ',
           style: TextStyle(
-            fontFamily: 'YujiSyuku',
+            fontFamily: yujiSyuku,
           ),
         ),
       ),
@@ -142,31 +184,62 @@ class _MainPageState extends State<MainPage> {
             children: <Widget>[
               Container(),
               Container(
-                height: 250.0,
+                height: 400.0,
                 child: FutureBuilder(
-                  future: _message,
+                  future: _futureMessage,
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     List<Widget> children = [];
                     if (snapshot.connectionState == ConnectionState.done) {
-                      if (snapshot.hasData) {
-                        print(snapshot.data);
+                      if (snapshot.hasData && _numberOfDraws == 0) {
                         children = [
-                          AnimatedDefaultTextStyle(
-                            child: Text('$_fortune\n\n二〇二二年は\n「${snapshot.data.toString()}」\nな一年になるでしょう'),
-                            style: _fortuneTextStyle,
-                            duration: Duration(seconds: 3),
+                          const Text(
+                            '↓ボタンをタップでおみくじを引く',
+                            style: TextStyle(
+                              fontFamily: yujiSyuku,
+                              fontSize: 20.0,
+                            ),
                           ),
                         ];
                       }
+                      else if (snapshot.hasData) {
+                        children = [
+                          AnimatedOpacity(
+                            opacity: _messageOpacity,
+                            child: Text(
+                              '$_fortune\n\n二〇二二年は\n「${snapshot.data.toString()}」\nな一年になるでしょう',
+                              style: TextStyle(
+                                fontSize: 30.0,
+                                fontFamily: yujiSyuku,
+                              ),
+                            ),
+                            duration: Duration(seconds: 2),
+                          ),
+                        ];
+                        print(snapshot.data);
+                      }
                       else if (snapshot.hasError) {
+                        print(snapshot.error);
                         children = [
                           Text(snapshot.error.toString()),
                         ];
                       }
                     }
-                    else {
+                    else if(_numberOfDraws != 0) {
                       children = [
                         CupertinoActivityIndicator(),
+                      ];
+                    }
+                    else {
+                      children = [
+                        Container(
+                          child: const Text(
+                            '↓ボタンをタップでおみくじを引く',
+                            style: TextStyle(
+                              fontFamily: yujiSyuku,
+                              fontSize: 20.0,
+                            ),
+                          ),
+                        ),
                       ];
                     }
                     return Center(
@@ -179,16 +252,15 @@ class _MainPageState extends State<MainPage> {
                 ),
               ),
               FlatButton(
-                onPressed: _reload,
+                onPressed: _drawAnOmikuji,
                 color: Colors.indigo[900],
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: const Text(
-                    'おみくじを引く',
+                  child: Text(
+                    _buttonText,
                     style: TextStyle(
                       color: Colors.white,
-                      fontFamily: 'YujiSyuku',
-                      fontSize: 20.0,
+                      fontFamily: yujiSyuku,
                     ),
                   ),
                 ),
