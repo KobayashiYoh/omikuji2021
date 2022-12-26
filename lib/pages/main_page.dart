@@ -1,8 +1,9 @@
+import 'dart:math' as math;
+
+import 'package:english_words/english_words.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:english_words/english_words.dart';
 import 'package:translator/translator.dart';
-import 'dart:math' as math;
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -43,32 +44,23 @@ class _MainPageState extends State<MainPage> {
 
     if (fortuneId == 99) {
       _fortune = _fortuneList[0];
-    }
-    else if (fortuneId > 90) {
+    } else if (fortuneId > 90) {
       _fortune = _fortuneList[1];
-    }
-    else if (fortuneId > 74) {
+    } else if (fortuneId > 74) {
       _fortune = _fortuneList[2];
-    }
-    else if (fortuneId > 58) {
+    } else if (fortuneId > 58) {
       _fortune = _fortuneList[3];
-    }
-    else if (fortuneId > 42) {
+    } else if (fortuneId > 42) {
       _fortune = _fortuneList[4];
-    }
-    else if (fortuneId > 26) {
+    } else if (fortuneId > 26) {
       _fortune = _fortuneList[5];
-    }
-    else if (fortuneId > 10) {
+    } else if (fortuneId > 10) {
       _fortune = _fortuneList[6];
-    }
-    else if (fortuneId > 0) {
+    } else if (fortuneId > 0) {
       _fortune = _fortuneList[7];
-    }
-    else if (fortuneId == 0) {
+    } else if (fortuneId == 0) {
       _fortune = _fortuneList[8];
-    }
-    else {
+    } else {
       _fortune = _fortuneList[9];
     }
     print(_fortune);
@@ -77,7 +69,8 @@ class _MainPageState extends State<MainPage> {
   Future<Translation> _wordGenerate() async {
     _englishWord = WordPair.random().asSnakeCase.replaceAll('_', ' ');
     print(_englishWord);
-    Future<Translation> generatedWord = _translator.translate(_englishWord, from: 'en', to: 'ja');
+    Future<Translation> generatedWord =
+        _translator.translate(_englishWord, from: 'en', to: 'ja');
     return generatedWord;
   }
 
@@ -152,19 +145,18 @@ class _MainPageState extends State<MainPage> {
                         print(snapshot.data);
                         children = [
                           AnimatedDefaultTextStyle(
-                            child: Text('$_fortune\n\n二〇二二年は\n「${snapshot.data.toString()}」\nな一年になるでしょう'),
+                            child: Text(
+                                '$_fortune\n\n二〇二二年は\n「${snapshot.data.toString()}」\nな一年になるでしょう'),
                             style: _fortuneTextStyle,
                             duration: Duration(seconds: 3),
                           ),
                         ];
-                      }
-                      else if (snapshot.hasError) {
+                      } else if (snapshot.hasError) {
                         children = [
                           Text(snapshot.error.toString()),
                         ];
                       }
-                    }
-                    else {
+                    } else {
                       children = [
                         CupertinoActivityIndicator(),
                       ];
@@ -178,9 +170,11 @@ class _MainPageState extends State<MainPage> {
                   },
                 ),
               ),
-              FlatButton(
+              ElevatedButton(
                 onPressed: _reload,
-                color: Colors.indigo[900],
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.indigo[900],
+                ),
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: const Text(
