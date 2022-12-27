@@ -13,18 +13,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final _fortuneList = [
-    '豪運',
-    '大吉',
-    '中吉',
-    '小吉',
-    '吉',
-    '末吉',
-    '凶',
-    '大凶',
-    '沼',
-    '印刷ミス',
-  ];
   final _translator = GoogleTranslator();
   late String _englishWord;
   late String _fortune;
@@ -36,34 +24,30 @@ class _MainPageState extends State<MainPage> {
     color: Colors.red,
   );
 
-  // 乱数から運勢を決定
-  void _generateFortune() {
-    var rand = math.Random();
-    int fortuneId = rand.nextInt(100);
-    print('Fortune ID: $fortuneId');
-
-    if (fortuneId == 99) {
-      _fortune = _fortuneList[0];
-    } else if (fortuneId > 90) {
-      _fortune = _fortuneList[1];
-    } else if (fortuneId > 74) {
-      _fortune = _fortuneList[2];
-    } else if (fortuneId > 58) {
-      _fortune = _fortuneList[3];
-    } else if (fortuneId > 42) {
-      _fortune = _fortuneList[4];
-    } else if (fortuneId > 26) {
-      _fortune = _fortuneList[5];
-    } else if (fortuneId > 10) {
-      _fortune = _fortuneList[6];
-    } else if (fortuneId > 0) {
-      _fortune = _fortuneList[7];
-    } else if (fortuneId == 0) {
-      _fortune = _fortuneList[8];
+  String _generateFortune() {
+    final rand = math.Random();
+    final fortuneId = rand.nextInt(100) + 1;
+    if (fortuneId == 1) {
+      return '沼'; // 1
+    } else if (fortuneId <= 10) {
+      return '大凶'; // 2 ~ 10
+    } else if (fortuneId <= 25) {
+      return '凶'; // 11 ~ 25
+    } else if (fortuneId <= 40) {
+      return '末吉'; // 26 ~ 40
+    } else if (fortuneId <= 60) {
+      return '吉'; // 41 ~ 60
+    } else if (fortuneId <= 75) {
+      return '小吉'; // 61 ~ 75
+    } else if (fortuneId <= 90) {
+      return '中吉'; // 76 ~ 90
+    } else if (fortuneId <= 99) {
+      return '大吉'; // 91 ~ 99
+    } else if (fortuneId == 100) {
+      return '豪運'; // 100
     } else {
-      _fortune = _fortuneList[9];
+      return '印刷ミス';
     }
-    print(_fortune);
   }
 
   Future<Translation> _wordGenerate() async {
@@ -101,7 +85,7 @@ class _MainPageState extends State<MainPage> {
     _initTextStyle();
     setState(() {
       print('\n--- おみくじを引く ---');
-      _generateFortune();
+      _fortune = _generateFortune();
       _message = _wordGenerate();
     });
     await Future.delayed(const Duration(seconds: 3));
