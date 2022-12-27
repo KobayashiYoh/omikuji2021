@@ -15,12 +15,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   late String _fortune;
   late Future<Translation> _message;
-
-  TextStyle _fortuneTextStyle = const TextStyle(
-    fontSize: 30.0,
-    fontFamily: 'YujiSyuku',
-    color: Colors.red,
-  );
+  Color? _fortuneTextColor;
 
   String _generateFortune() {
     final rand = math.Random();
@@ -60,30 +55,22 @@ class _MainPageState extends State<MainPage> {
   // テキストスタイルを初期化
   void _initTextStyle() {
     setState(() {
-      _fortuneTextStyle = const TextStyle(
-        fontSize: 30.0,
-        fontFamily: 'YujiSyuku',
-        color: Colors.transparent,
-      );
+      _fortuneTextColor = Colors.transparent;
     });
   }
 
   // テキストスタイルを変更
   void _changeTextStyle() {
     setState(() {
-      _fortuneTextStyle = const TextStyle(
-        fontSize: 30.0,
-        fontFamily: 'YujiSyuku',
-        color: Colors.black,
-      );
+      _fortuneTextColor = Colors.black;
     });
   }
 
   // おみくじを引く
   Future<void> _reload() async {
     _initTextStyle();
+    print('\n--- おみくじを引く ---');
     setState(() {
-      print('\n--- おみくじを引く ---');
       _fortune = _generateFortune();
       _message = _generateWord();
     });
@@ -102,12 +89,7 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.indigo[900],
-        title: const Text(
-          'おみくじアプリ',
-          style: TextStyle(
-            fontFamily: 'YujiSyuku',
-          ),
-        ),
+        title: const Text('おみくじアプリ'),
       ),
       body: SafeArea(
         child: Container(
@@ -128,7 +110,11 @@ class _MainPageState extends State<MainPage> {
                         print(snapshot.data);
                         children = [
                           AnimatedDefaultTextStyle(
-                            style: _fortuneTextStyle,
+                            style: TextStyle(
+                              fontSize: 32.0,
+                              color: _fortuneTextColor,
+                              fontFamily: 'YujiSyuku',
+                            ),
                             duration: const Duration(seconds: 3),
                             child: Text(
                                 '$_fortune\n\n二〇二二年は\n「${snapshot.data.toString()}」\nな一年になるでしょう'),
@@ -157,16 +143,13 @@ class _MainPageState extends State<MainPage> {
                 onPressed: _reload,
                 style: TextButton.styleFrom(
                   backgroundColor: Colors.indigo[900],
+                  foregroundColor: Colors.white,
                 ),
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: const Text(
                     'おみくじを引く',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'YujiSyuku',
-                      fontSize: 20.0,
-                    ),
+                    style: TextStyle(fontSize: 20.0),
                   ),
                 ),
               ),
