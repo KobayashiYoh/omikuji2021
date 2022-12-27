@@ -13,9 +13,11 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  bool _isLoading = false;
+  bool _hasError = false;
   late String _fortune;
-  late Future<Translation> _message;
-  Color? _fortuneTextColor;
+  late String _message;
+  Color? _fortuneTextColor = Colors.transparent;
 
   String _generateFortune() {
     final rand = math.Random();
@@ -43,39 +45,41 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
-  Future<Translation> _generateWord() async {
+  Future<String> _generateWord() async {
+    final Translation generatedWord;
     final translator = GoogleTranslator();
     final String englishWord =
         WordPair.random().asSnakeCase.replaceAll('_', ' ');
-    Future<Translation> generatedWord =
-        translator.translate(englishWord, from: 'en', to: 'ja');
-    return generatedWord;
-  }
-
-  // テキストスタイルを初期化
-  void _initTextStyle() {
     setState(() {
       _fortuneTextColor = Colors.transparent;
+      _hasError = false;
+      _isLoading = true;
     });
-  }
-
-  // テキストスタイルを変更
-  void _changeTextStyle() {
-    setState(() {
-      _fortuneTextColor = Colors.black;
-    });
+    try {
+      generatedWord =
+          await translator.translate(englishWord, from: 'en', to: 'ja');
+    } catch (e) {
+      setState(() {
+        _hasError = true;
+      });
+      throw Exception(e);
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+    return generatedWord.toString();
   }
 
   // おみくじを引く
   Future<void> _reload() async {
-    _initTextStyle();
     print('\n--- おみくじを引く ---');
-    setState(() {
-      _fortune = _generateFortune();
-      _message = _generateWord();
-    });
+    _fortune = _generateFortune();
+    _message = await _generateWord();
     await Future.delayed(const Duration(seconds: 3));
-    _changeTextStyle();
+    setState(() {
+      _fortuneTextColor = Colors.black;
+    });
   }
 
   @override
@@ -95,21 +99,16 @@ class _MainPageState extends State<MainPage> {
         child: Container(
           padding: const EdgeInsets.all(15.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Container(),
-              SizedBox(
-                height: 250.0,
-                child: FutureBuilder(
-                  future: _message,
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    List<Widget> children = [];
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      if (snapshot.hasData) {
-                        print(snapshot.data);
-                        children = [
-                          AnimatedDefaultTextStyle(
+              const Spacer(),
+              Center(
+                child: _isLoading
+                    ? const CupertinoActivityIndicator()
+                    : _hasError
+                        ? const Icon(Icons.error_outline)
+                        : AnimatedDefaultTextStyle(
                             style: TextStyle(
                               fontSize: 32.0,
                               color: _fortuneTextColor,
@@ -117,28 +116,11 @@ class _MainPageState extends State<MainPage> {
                             ),
                             duration: const Duration(seconds: 3),
                             child: Text(
-                                '$_fortune\n\n二〇二二年は\n「${snapshot.data.toString()}」\nな一年になるでしょう'),
+                              '$_fortune\n\n二〇二二年は\n「$_message」\nな一年になるでしょう',
+                            ),
                           ),
-                        ];
-                      } else if (snapshot.hasError) {
-                        children = [
-                          Text(snapshot.error.toString()),
-                        ];
-                      }
-                    } else {
-                      children = [
-                        const CupertinoActivityIndicator(),
-                      ];
-                    }
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: children,
-                      ),
-                    );
-                  },
-                ),
               ),
+              const Spacer(),
               ElevatedButton(
                 onPressed: _reload,
                 style: TextButton.styleFrom(
