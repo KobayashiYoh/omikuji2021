@@ -13,8 +13,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final _translator = GoogleTranslator();
-  late String _englishWord;
   late String _fortune;
   late Future<Translation> _message;
 
@@ -50,11 +48,12 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
-  Future<Translation> _wordGenerate() async {
-    _englishWord = WordPair.random().asSnakeCase.replaceAll('_', ' ');
-    print(_englishWord);
+  Future<Translation> _generateWord() async {
+    final translator = GoogleTranslator();
+    final String englishWord =
+        WordPair.random().asSnakeCase.replaceAll('_', ' ');
     Future<Translation> generatedWord =
-        _translator.translate(_englishWord, from: 'en', to: 'ja');
+        translator.translate(englishWord, from: 'en', to: 'ja');
     return generatedWord;
   }
 
@@ -86,7 +85,7 @@ class _MainPageState extends State<MainPage> {
     setState(() {
       print('\n--- おみくじを引く ---');
       _fortune = _generateFortune();
-      _message = _wordGenerate();
+      _message = _generateWord();
     });
     await Future.delayed(const Duration(seconds: 3));
     _changeTextStyle();
