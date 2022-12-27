@@ -9,7 +9,7 @@ class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
 
   @override
-  _MainPageState createState() => _MainPageState();
+  State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
@@ -30,7 +30,7 @@ class _MainPageState extends State<MainPage> {
   late String _fortune;
   late Future<Translation> _message;
 
-  TextStyle _fortuneTextStyle = TextStyle(
+  TextStyle _fortuneTextStyle = const TextStyle(
     fontSize: 30.0,
     fontFamily: 'YujiSyuku',
     color: Colors.red,
@@ -38,7 +38,7 @@ class _MainPageState extends State<MainPage> {
 
   // 乱数から運勢を決定
   void _generateFortune() {
-    var rand = new math.Random();
+    var rand = math.Random();
     int fortuneId = rand.nextInt(100);
     print('Fortune ID: $fortuneId');
 
@@ -77,7 +77,7 @@ class _MainPageState extends State<MainPage> {
   // テキストスタイルを初期化
   void _initTextStyle() {
     setState(() {
-      _fortuneTextStyle = TextStyle(
+      _fortuneTextStyle = const TextStyle(
         fontSize: 30.0,
         fontFamily: 'YujiSyuku',
         color: Colors.transparent,
@@ -88,7 +88,7 @@ class _MainPageState extends State<MainPage> {
   // テキストスタイルを変更
   void _changeTextStyle() {
     setState(() {
-      _fortuneTextStyle = TextStyle(
+      _fortuneTextStyle = const TextStyle(
         fontSize: 30.0,
         fontFamily: 'YujiSyuku',
         color: Colors.black,
@@ -104,7 +104,7 @@ class _MainPageState extends State<MainPage> {
       _generateFortune();
       _message = _wordGenerate();
     });
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3));
     _changeTextStyle();
   }
 
@@ -134,7 +134,7 @@ class _MainPageState extends State<MainPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Container(),
-              Container(
+              SizedBox(
                 height: 250.0,
                 child: FutureBuilder(
                   future: _message,
@@ -145,10 +145,10 @@ class _MainPageState extends State<MainPage> {
                         print(snapshot.data);
                         children = [
                           AnimatedDefaultTextStyle(
+                            style: _fortuneTextStyle,
+                            duration: const Duration(seconds: 3),
                             child: Text(
                                 '$_fortune\n\n二〇二二年は\n「${snapshot.data.toString()}」\nな一年になるでしょう'),
-                            style: _fortuneTextStyle,
-                            duration: Duration(seconds: 3),
                           ),
                         ];
                       } else if (snapshot.hasError) {
@@ -158,7 +158,7 @@ class _MainPageState extends State<MainPage> {
                       }
                     } else {
                       children = [
-                        CupertinoActivityIndicator(),
+                        const CupertinoActivityIndicator(),
                       ];
                     }
                     return Center(

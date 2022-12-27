@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:omikuji2021/main_page.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -10,10 +10,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'omikuji2021',
-      home: MainPage(),
+    return const MaterialApp(
+      title: 'Omikuji App',
       debugShowCheckedModeBanner: false,
+      home: MainPage(),
     );
   }
 }
