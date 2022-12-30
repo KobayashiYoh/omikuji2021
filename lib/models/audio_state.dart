@@ -5,6 +5,6 @@ part 'audio_state.freezed.dart';
 @freezed
 class AudioState with _$AudioState {
   const factory AudioState({
-    required bool isPlaying,
+    required bool isMute,
   }) = _AudioState;
 }

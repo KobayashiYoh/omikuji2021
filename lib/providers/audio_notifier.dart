@@ -1,32 +1,30 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:omikuji_app/audio_state.dart';
 import 'package:omikuji_app/constants/sound_path.dart';
+import 'package:omikuji_app/models/audio_state.dart';
 
 final audioProvider =
     StateNotifierProvider<AudioNotifier, AudioState>((ref) => AudioNotifier());
 
 class AudioNotifier extends StateNotifier<AudioState> {
   final AudioPlayer bgmPlayer = AudioPlayer();
-  AudioNotifier() : super(const AudioState(isPlaying: false)) {
+  final AudioPlayer sePlayer = AudioPlayer();
+  AudioNotifier() : super(const AudioState(isMute: true)) {
     bgmPlayer.setReleaseMode(ReleaseMode.loop);
-    bgmPlayer.setVolume(0.1);
+    bgmPlayer.setVolume(0.2);
   }
 
-  void _setPlaying() {
-    bgmPlayer.onPlayerStateChanged.listen((playerState) {
-      state = state.copyWith(
-        isPlaying: playerState == PlayerState.playing,
-      );
-    });
+  void _setMute(bool value) {
+    state = state.copyWith(isMute: value);
   }
 
-  void onPressedBgmButton() {
-    if (state.isPlaying) {
-      bgmPlayer.stop();
-    } else {
+  void onPressedMuteButton() {
+    if (state.isMute) {
       bgmPlayer.play(AssetSource(SoundPath.bgm));
+      _setMute(false);
+    } else {
+      bgmPlayer.stop();
+      _setMute(true);
     }
-    _setPlaying();
   }
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:omikuji_app/audio_notifier.dart';
-import 'package:omikuji_app/omikuji_notifier.dart';
-import 'package:omikuji_app/omikuji_state.dart';
+import 'package:omikuji_app/models/omikuji_state.dart';
+import 'package:omikuji_app/providers/audio_notifier.dart';
+import 'package:omikuji_app/providers/omikuji_notifier.dart';
 
 class OmikujiPage extends ConsumerWidget {
   const OmikujiPage({Key? key}) : super(key: key);
@@ -19,10 +19,10 @@ class OmikujiPage extends ConsumerWidget {
         title: const Text('おみくじアプリ'),
         actions: [
           IconButton(
-            onPressed: audioNotifier.onPressedBgmButton,
-            icon: audioState.isPlaying
-                ? const Icon(Icons.volume_up_outlined)
-                : const Icon(Icons.volume_off_outlined),
+            onPressed: audioNotifier.onPressedMuteButton,
+            icon: audioState.isMute
+                ? const Icon(Icons.volume_off_outlined)
+                : const Icon(Icons.volume_up_outlined),
           ),
         ],
       ),
