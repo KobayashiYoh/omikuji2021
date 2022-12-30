@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:omikuji_app/constants/sound_path.dart';
 import 'package:omikuji_app/models/audio_state.dart';
@@ -12,6 +13,9 @@ class AudioNotifier extends StateNotifier<AudioState> {
   AudioNotifier() : super(const AudioState(isMute: true)) {
     bgmPlayer.setReleaseMode(ReleaseMode.loop);
     bgmPlayer.setVolume(0.2);
+    if (!kIsWeb) {
+      onPressedMuteButton();
+    }
   }
 
   void _setMute(bool value) {
