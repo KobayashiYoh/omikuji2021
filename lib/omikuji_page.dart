@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:omikuji2021/omikuji_notifier.dart';
-import 'package:omikuji2021/omikuji_state.dart';
+import 'package:omikuji_app/omikuji_notifier.dart';
+import 'package:omikuji_app/omikuji_state.dart';
 
 class OmikujiPage extends ConsumerWidget {
   const OmikujiPage({Key? key}) : super(key: key);

@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:english_words/english_words.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:omikuji2021/omikuji_state.dart';
+import 'package:omikuji_app/omikuji_state.dart';
 import 'package:translator/translator.dart';
 
 final omikujiProvider = StateNotifierProvider<OmikujiNotifier, OmikujiState>(

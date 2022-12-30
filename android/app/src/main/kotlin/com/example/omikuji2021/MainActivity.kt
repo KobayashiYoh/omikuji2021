@@ -1,4 +1,4 @@
-package com.example.omikuji2021
+package com.example.omikuji_app
 
 import io.flutter.embedding.android.FlutterActivity
 
