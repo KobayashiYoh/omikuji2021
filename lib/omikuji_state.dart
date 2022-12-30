@@ -13,6 +13,10 @@ class OmikujiState with _$OmikujiState {
   }) = _OmikujiState;
 }
 
+extension OmikujiStateExtention on OmikujiState {
+  int get animationDurationSeconds => opacityLevel == 0 ? 0 : 2;
+}
+
 const OmikujiState kInitialOmikujiState = OmikujiState(
   isLoading: false,
   hasError: false,
