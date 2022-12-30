@@ -18,10 +18,27 @@ class AudioNotifier extends StateNotifier<AudioState> {
     state = state.copyWith(isMute: value);
   }
 
+  void _playSe(String soundPath) {
+    if (state.isMute) {
+      return;
+    }
+    sePlayer.stop();
+    sePlayer.play(AssetSource(soundPath));
+  }
+
+  void playTapSe() {
+    _playSe(SoundPath.tap);
+  }
+
+  void playShamisenSe() {
+    _playSe(SoundPath.shamisen);
+  }
+
   void onPressedMuteButton() {
     if (state.isMute) {
       bgmPlayer.play(AssetSource(SoundPath.bgm));
       _setMute(false);
+      playTapSe();
     } else {
       bgmPlayer.stop();
       _setMute(true);

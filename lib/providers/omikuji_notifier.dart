@@ -3,13 +3,15 @@ import 'dart:math' as math;
 import 'package:english_words/english_words.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:omikuji_app/models/omikuji_state.dart';
+import 'package:omikuji_app/providers/audio_notifier.dart';
 import 'package:translator/translator.dart';
 
 final omikujiProvider = StateNotifierProvider<OmikujiNotifier, OmikujiState>(
-    (ref) => OmikujiNotifier());
+    (ref) => OmikujiNotifier(ref: ref));
 
 class OmikujiNotifier extends StateNotifier<OmikujiState> {
-  OmikujiNotifier() : super(kInitialOmikujiState);
+  final Ref ref;
+  OmikujiNotifier({required this.ref}) : super(kInitialOmikujiState);
 
   void _setLoading(bool value) {
     state = state.copyWith(isLoading: value);
@@ -77,6 +79,8 @@ class OmikujiNotifier extends StateNotifier<OmikujiState> {
   }
 
   Future<void> drawOmikuji() async {
+    final audioNotifier = ref.read(audioProvider.notifier);
+    audioNotifier.playTapSe();
     _setOpacityLevel(0.0);
     final int fortuneId = _generateFortuneId();
     final String fortune = _getFortune(fortuneId);
@@ -88,5 +92,7 @@ class OmikujiNotifier extends StateNotifier<OmikujiState> {
     );
     await Future.delayed(const Duration(seconds: 1));
     _setOpacityLevel(1.0);
+    await Future.delayed(const Duration(milliseconds: 500));
+    audioNotifier.playShamisenSe();
   }
 }
