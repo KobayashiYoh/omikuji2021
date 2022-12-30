@@ -11,23 +11,25 @@ final omikujiProvider = StateNotifierProvider<OmikujiNotifier, OmikujiState>(
 class OmikujiNotifier extends StateNotifier<OmikujiState> {
   OmikujiNotifier() : super(kInitialOmikujiState);
 
-  _setLoading(bool value) {
+  void _setLoading(bool value) {
     state = state.copyWith(isLoading: value);
   }
 
-  _setError(bool value) {
+  void _setError(bool value) {
     state = state.copyWith(hasError: value);
   }
 
-  _setOpacityLevel(double value) {
+  void _setOpacityLevel(double value) {
     state = state.copyWith(opacityLevel: value);
   }
 
+  // 1〜100までのFortune IDを生成
   int _generateFortuneId() {
     final rand = math.Random();
     return rand.nextInt(100) + 1;
   }
 
+  // Fortune IDを元に運勢を判定
   String _getFortune(int fortuneId) {
     if (fortuneId == 1) {
       return '沼'; // 1
@@ -52,6 +54,7 @@ class OmikujiNotifier extends StateNotifier<OmikujiState> {
     }
   }
 
+  // スネークケースで英単語のペアを生成（アンダーバーを半角スペースに置き換える）
   String _generateRandomWordPair() {
     return WordPair.random().asSnakeCase.replaceAll('_', ' ');
   }
