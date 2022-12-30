@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:omikuji_app/audio_notifier.dart';
 import 'package:omikuji_app/omikuji_notifier.dart';
 import 'package:omikuji_app/omikuji_state.dart';
 
@@ -10,10 +11,20 @@ class OmikujiPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final omikujiState = ref.watch(omikujiProvider);
+    final audioState = ref.watch(audioProvider);
     final omikujiNotifier = ref.watch(omikujiProvider.notifier);
+    final audioNotifier = ref.watch(audioProvider.notifier);
     return Scaffold(
       appBar: AppBar(
         title: const Text('おみくじアプリ'),
+        actions: [
+          IconButton(
+            onPressed: audioNotifier.onPressedBgmButton,
+            icon: audioState.isPlaying
+                ? const Icon(Icons.volume_up_outlined)
+                : const Icon(Icons.volume_off_outlined),
+          ),
+        ],
       ),
       body: SafeArea(
         child: Container(
