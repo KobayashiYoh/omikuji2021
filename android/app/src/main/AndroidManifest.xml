@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.omikuji2021">
+    package="com.example.omikuji_app">
    <application
-        android:label="omikuji2021"
+        android:label="omikuji_app"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

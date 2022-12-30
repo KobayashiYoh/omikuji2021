@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:omikuji2021/pages/main_page.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:omikuji_app/omikuji_page.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -11,9 +16,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'omikuji2021',
-      home: MainPage(),
+      title: 'Omikuji App',
+      theme: ThemeData(
+        fontFamily: 'YujiSyuku',
+        colorScheme:
+            ThemeData().colorScheme.copyWith(primary: Colors.indigo[900]),
+      ),
       debugShowCheckedModeBanner: false,
+      home: const OmikujiPage(),
     );
   }
 }
