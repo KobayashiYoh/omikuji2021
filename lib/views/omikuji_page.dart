@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:omikuji_app/providers/audio_notifier.dart';
 import 'package:omikuji_app/providers/omikuji_notifier.dart';
-import 'package:omikuji_app/result_view.dart';
 import 'package:omikuji_app/views/loading_view.dart';
 import 'package:omikuji_app/views/network_error_view.dart';
+import 'package:omikuji_app/views/result_view.dart';
 
 class OmikujiPage extends ConsumerWidget {
   const OmikujiPage({Key? key}) : super(key: key);
@@ -39,7 +39,7 @@ class OmikujiPage extends ConsumerWidget {
                     ? const LoadingView()
                     : omikujiState.hasError
                         ? const NetworkErrorView()
-                        : ResultPage(omikujiState: omikujiState),
+                        : ResultView(omikujiState: omikujiState),
               ),
               const Spacer(),
               SizedBox(

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:omikuji_app/models/omikuji_state.dart';
 
-class ResultPage extends StatelessWidget {
-  const ResultPage({Key? key, required this.omikujiState}) : super(key: key);
+class ResultView extends StatelessWidget {
+  const ResultView({Key? key, required this.omikujiState}) : super(key: key);
   final OmikujiState omikujiState;
 
   @override
