@@ -34,8 +34,8 @@ class AudioNotifier extends StateNotifier<AudioState> {
     _playSe(SoundPath.tap);
   }
 
-  void playShamisenSe() {
-    _playSe(SoundPath.shamisen);
+  void playResultSE(String soundPath) {
+    _playSe(soundPath);
   }
 
   void onPressedMuteButton() {

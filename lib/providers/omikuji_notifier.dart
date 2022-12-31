@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:english_words/english_words.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:omikuji_app/constants/sound_path.dart';
 import 'package:omikuji_app/models/omikuji_state.dart';
 import 'package:omikuji_app/providers/audio_notifier.dart';
 import 'package:translator/translator.dart';
@@ -10,8 +11,9 @@ final omikujiProvider = StateNotifierProvider<OmikujiNotifier, OmikujiState>(
     (ref) => OmikujiNotifier(ref: ref));
 
 class OmikujiNotifier extends StateNotifier<OmikujiState> {
-  final Ref ref;
   OmikujiNotifier({required this.ref}) : super(kInitialOmikujiState);
+  final Ref ref;
+  String resultSoundPath = SoundPath.shamisen;
 
   void _setLoading(bool value) {
     state = state.copyWith(isLoading: value);
@@ -32,43 +34,64 @@ class OmikujiNotifier extends StateNotifier<OmikujiState> {
   }
 
   // Fortune IDを元に運勢を判定
-  String _getFortune(int fortuneId) {
+  void _generateFortune() {
+    final String fortune;
+    final int fortuneId = _generateFortuneId();
     if (fortuneId == 1) {
-      return '沼'; // 1
+      // 沼: ID 1
+      fortune = '沼';
+      resultSoundPath = SoundPath.numa;
     } else if (fortuneId <= 10) {
-      return '大凶'; // 2 ~ 10
+      // 大凶: ID 2 ~ 10
+      fortune = '大凶';
+      resultSoundPath = SoundPath.kyoDaikyo;
     } else if (fortuneId <= 25) {
-      return '凶'; // 11 ~ 25
+      // 凶: ID 11 ~ 25
+      fortune = '凶';
+      resultSoundPath = SoundPath.kyoDaikyo;
     } else if (fortuneId <= 40) {
-      return '末吉'; // 26 ~ 40
+      // 末吉: ID 26 ~ 40
+      fortune = '末吉';
+      resultSoundPath = SoundPath.shamisen;
     } else if (fortuneId <= 60) {
-      return '吉'; // 41 ~ 60
+      // 吉: ID 41 ~ 60
+      fortune = '吉';
+      resultSoundPath = SoundPath.shamisen;
     } else if (fortuneId <= 75) {
-      return '小吉'; // 61 ~ 75
+      // 小吉: ID 61 ~ 75
+      fortune = '小吉';
+      resultSoundPath = SoundPath.shamisen;
     } else if (fortuneId <= 90) {
-      return '中吉'; // 76 ~ 90
+      // 中吉: ID 76 ~ 90
+      fortune = '中吉';
+      resultSoundPath = SoundPath.chukichiDaikyo;
     } else if (fortuneId <= 99) {
-      return '大吉'; // 91 ~ 99
+      // 大吉: ID 91 ~ 99
+      fortune = '大吉';
+      resultSoundPath = SoundPath.chukichiDaikyo;
     } else if (fortuneId == 100) {
-      return '豪運'; // 100
+      // 豪運: ID 100
+      fortune = '豪運';
+      resultSoundPath = SoundPath.gohun;
     } else {
-      return '印刷ミス';
+      // その他
+      fortune = '印刷ミス';
+      resultSoundPath = SoundPath.shamisen;
     }
+    state = state.copyWith(
+      fortune: fortune,
+    );
   }
 
-  // スネークケースで英単語のペアを生成（アンダーバーを半角スペースに置き換える）
-  String _generateRandomWordPair() {
-    return WordPair.random().asSnakeCase.replaceAll('_', ' ');
-  }
-
-  Future<String> _translateEnWordToJa(String englishWord) async {
+  Future<String> _generateMessage() async {
     final translator = GoogleTranslator();
     final Translation translation;
+    // スネークケースで英単語のペアを生成（アンダーバーを半角スペースに置き換える）
+    final String wordPair = WordPair.random().asSnakeCase.replaceAll('_', ' ');
     _setLoading(true);
     _setError(false);
     try {
-      translation =
-          await translator.translate(englishWord, from: 'en', to: 'ja');
+      translation = await translator.translate(wordPair, from: 'en', to: 'ja');
     } catch (e) {
       _setError(true);
       throw Exception(e);
@@ -82,17 +105,14 @@ class OmikujiNotifier extends StateNotifier<OmikujiState> {
     final audioNotifier = ref.read(audioProvider.notifier);
     audioNotifier.playTapSe();
     _setOpacityLevel(0.0);
-    final int fortuneId = _generateFortuneId();
-    final String fortune = _getFortune(fortuneId);
-    final String randomWordPair = _generateRandomWordPair();
-    final String message = await _translateEnWordToJa(randomWordPair);
+    _generateFortune();
+    final String message = await _generateMessage();
     state = state.copyWith(
-      fortune: fortune,
       message: message,
     );
     await Future.delayed(const Duration(seconds: 1));
     _setOpacityLevel(1.0);
     await Future.delayed(const Duration(milliseconds: 500));
-    audioNotifier.playShamisenSe();
+    audioNotifier.playResultSE(resultSoundPath);
   }
 }
