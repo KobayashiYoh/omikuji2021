@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:omikuji_app/providers/audio_notifier.dart';
 import 'package:omikuji_app/providers/omikuji_notifier.dart';
 import 'package:omikuji_app/result_view.dart';
+import 'package:omikuji_app/views/network_error_view.dart';
 
 class OmikujiPage extends ConsumerWidget {
   const OmikujiPage({Key? key}) : super(key: key);
@@ -37,7 +38,7 @@ class OmikujiPage extends ConsumerWidget {
                 child: omikujiState.isLoading
                     ? const CupertinoActivityIndicator()
                     : omikujiState.hasError
-                        ? const Icon(Icons.error_outline)
+                        ? const NetworkErrorView()
                         : ResultPage(omikujiState: omikujiState),
               ),
               const Spacer(),
