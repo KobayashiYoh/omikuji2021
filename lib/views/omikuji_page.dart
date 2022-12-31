@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:omikuji_app/providers/audio_notifier.dart';
 import 'package:omikuji_app/providers/omikuji_notifier.dart';
 import 'package:omikuji_app/result_view.dart';
+import 'package:omikuji_app/views/loading_view.dart';
 import 'package:omikuji_app/views/network_error_view.dart';
 
 class OmikujiPage extends ConsumerWidget {
@@ -36,7 +36,7 @@ class OmikujiPage extends ConsumerWidget {
               const Spacer(),
               Center(
                 child: omikujiState.isLoading
-                    ? const CupertinoActivityIndicator()
+                    ? const LoadingView()
                     : omikujiState.hasError
                         ? const NetworkErrorView()
                         : ResultPage(omikujiState: omikujiState),
