@@ -131,7 +131,7 @@ class OmikujiNotifier extends StateNotifier<OmikujiState> {
     state = state.copyWith(
       message: message,
     );
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(milliseconds: 500));
     _setOpacityLevel(1.0);
     await Future.delayed(const Duration(milliseconds: 500));
     audioNotifier.playResultSE(resultSoundPath);
