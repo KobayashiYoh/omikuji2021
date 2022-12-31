@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:omikuji_app/models/omikuji_state.dart';
 import 'package:omikuji_app/providers/audio_notifier.dart';
 import 'package:omikuji_app/providers/omikuji_notifier.dart';
+import 'package:omikuji_app/result_view.dart';
 
 class OmikujiPage extends ConsumerWidget {
   const OmikujiPage({Key? key}) : super(key: key);
@@ -38,16 +38,7 @@ class OmikujiPage extends ConsumerWidget {
                     ? const CupertinoActivityIndicator()
                     : omikujiState.hasError
                         ? const Icon(Icons.error_outline)
-                        : AnimatedOpacity(
-                            opacity: omikujiState.opacityLevel,
-                            duration: Duration(
-                              seconds: omikujiState.animationDurationSeconds,
-                            ),
-                            child: Text(
-                              '${omikujiState.fortune}\n\n二〇二二年は\n「${omikujiState.message}」\nな一年になるでしょう',
-                              style: const TextStyle(fontSize: 32.0),
-                            ),
-                          ),
+                        : ResultPage(omikujiState: omikujiState),
               ),
               const Spacer(),
               SizedBox(
