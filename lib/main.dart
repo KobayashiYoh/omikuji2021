@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:omikuji_app/omikuji_page.dart';
+import 'package:omikuji_app/views/omikuji_page.dart';
 
 void main() {
   runApp(
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Omikuji App',
+      title: 'おみくじ',
       theme: ThemeData(
         fontFamily: 'YujiSyuku',
         colorScheme:

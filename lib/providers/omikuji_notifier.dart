@@ -11,7 +11,9 @@ final omikujiProvider = StateNotifierProvider<OmikujiNotifier, OmikujiState>(
     (ref) => OmikujiNotifier(ref: ref));
 
 class OmikujiNotifier extends StateNotifier<OmikujiState> {
-  OmikujiNotifier({required this.ref}) : super(kInitialOmikujiState);
+  OmikujiNotifier({required this.ref}) : super(kInitialOmikujiState) {
+    _setKanjiYearText();
+  }
   final Ref ref;
   String resultSoundPath = SoundPath.shamisen;
 
@@ -25,6 +27,25 @@ class OmikujiNotifier extends StateNotifier<OmikujiState> {
 
   void _setOpacityLevel(double value) {
     state = state.copyWith(opacityLevel: value);
+  }
+
+  void _setKanjiYearText() {
+    final DateTime now = DateTime.now();
+    final String yearText = now.year.toString();
+    final String kanjiYearText = yearText
+        .replaceAll('0', '〇')
+        .replaceAll('1', '一')
+        .replaceAll('2', '二')
+        .replaceAll('3', '三')
+        .replaceAll('4', '四')
+        .replaceAll('5', '五')
+        .replaceAll('6', '六')
+        .replaceAll('7', '七')
+        .replaceAll('8', '八')
+        .replaceAll('9', '九');
+    state = state.copyWith(
+      kanjiYearText: kanjiYearText,
+    );
   }
 
   // 1〜100までのFortune IDを生成
@@ -110,7 +131,7 @@ class OmikujiNotifier extends StateNotifier<OmikujiState> {
     state = state.copyWith(
       message: message,
     );
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(milliseconds: 500));
     _setOpacityLevel(1.0);
     await Future.delayed(const Duration(milliseconds: 500));
     audioNotifier.playResultSE(resultSoundPath);

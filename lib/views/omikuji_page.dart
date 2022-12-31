@@ -1,9 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:omikuji_app/models/omikuji_state.dart';
 import 'package:omikuji_app/providers/audio_notifier.dart';
 import 'package:omikuji_app/providers/omikuji_notifier.dart';
+import 'package:omikuji_app/views/loading_view.dart';
+import 'package:omikuji_app/views/network_error_view.dart';
+import 'package:omikuji_app/views/result_view.dart';
 
 class OmikujiPage extends ConsumerWidget {
   const OmikujiPage({Key? key}) : super(key: key);
@@ -16,7 +17,7 @@ class OmikujiPage extends ConsumerWidget {
     final audioNotifier = ref.watch(audioProvider.notifier);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('おみくじアプリ'),
+        title: const Text('おみくじ'),
         actions: [
           IconButton(
             onPressed: audioNotifier.onPressedMuteButton,
@@ -35,19 +36,10 @@ class OmikujiPage extends ConsumerWidget {
               const Spacer(),
               Center(
                 child: omikujiState.isLoading
-                    ? const CupertinoActivityIndicator()
+                    ? const LoadingView()
                     : omikujiState.hasError
-                        ? const Icon(Icons.error_outline)
-                        : AnimatedOpacity(
-                            opacity: omikujiState.opacityLevel,
-                            duration: Duration(
-                              seconds: omikujiState.animationDurationSeconds,
-                            ),
-                            child: Text(
-                              '${omikujiState.fortune}\n\n二〇二二年は\n「${omikujiState.message}」\nな一年になるでしょう',
-                              style: const TextStyle(fontSize: 32.0),
-                            ),
-                          ),
+                        ? const NetworkErrorView()
+                        : ResultView(omikujiState: omikujiState),
               ),
               const Spacer(),
               SizedBox(

@@ -9,6 +9,7 @@ class OmikujiState with _$OmikujiState {
     required bool hasError,
     required String fortune,
     required String message,
+    required String kanjiYearText,
     required double opacityLevel,
   }) = _OmikujiState;
 }
@@ -22,5 +23,6 @@ const OmikujiState kInitialOmikujiState = OmikujiState(
   hasError: false,
   fortune: '',
   message: '',
+  kanjiYearText: '',
   opacityLevel: 0.0,
 );
