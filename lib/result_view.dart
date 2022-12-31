@@ -12,9 +12,22 @@ class ResultPage extends StatelessWidget {
       duration: Duration(
         seconds: omikujiState.animationDurationSeconds,
       ),
-      child: Text(
-        '${omikujiState.fortune}\n\n${omikujiState.kanjiYearText}年は\n「${omikujiState.message}」\nな一年になるでしょう',
-        style: const TextStyle(fontSize: 32.0),
+      child: Column(
+        children: [
+          Text(
+            omikujiState.fortune,
+            style: const TextStyle(
+              fontSize: 64.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 32.0),
+          Text(
+            '${omikujiState.kanjiYearText}年は\n「${omikujiState.message}」\nな一年になるでしょう',
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 32.0),
+          )
+        ],
       ),
     );
   }
