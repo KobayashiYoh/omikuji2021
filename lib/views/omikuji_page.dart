@@ -15,48 +15,54 @@ class OmikujiPage extends ConsumerWidget {
     final audioState = ref.watch(audioProvider);
     final omikujiNotifier = ref.watch(omikujiProvider.notifier);
     final audioNotifier = ref.watch(audioProvider.notifier);
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('おみくじ'),
-        actions: [
-          IconButton(
-            onPressed: audioNotifier.onPressedMuteButton,
-            icon: audioState.isMute
-                ? const Icon(Icons.volume_off_outlined)
-                : const Icon(Icons.volume_up_outlined),
-          ),
-        ],
-      ),
-      body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              const Spacer(),
-              Center(
-                child: omikujiState.isLoading
-                    ? const LoadingView()
-                    : omikujiState.hasError
-                        ? const NetworkErrorView()
-                        : ResultView(omikujiState: omikujiState),
-              ),
-              const Spacer(),
-              SizedBox(
-                height: 48.0,
-                child: ElevatedButton(
-                  onPressed: omikujiNotifier.drawOmikuji,
-                  child: const Text(
-                    'おみくじを引く',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      color: Colors.white,
+    return SelectionArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('おみくじ'),
+          backgroundColor: Colors.indigo[900],
+          actions: [
+            IconButton(
+              onPressed: audioNotifier.onPressedMuteButton,
+              icon: audioState.isMute
+                  ? const Icon(Icons.volume_off_outlined)
+                  : const Icon(Icons.volume_up_outlined),
+            ),
+          ],
+        ),
+        body: SafeArea(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                const Spacer(),
+                Center(
+                  child: omikujiState.isLoading
+                      ? const LoadingView()
+                      : omikujiState.hasError
+                          ? const NetworkErrorView()
+                          : ResultView(omikujiState: omikujiState),
+                ),
+                const Spacer(),
+                SizedBox(
+                  height: 48.0,
+                  child: ElevatedButton(
+                    onPressed: omikujiNotifier.drawOmikuji,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.indigo[900],
+                    ),
+                    child: const Text(
+                      'おみくじを引く',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 32.0),
-            ],
+                const SizedBox(height: 32.0),
+              ],
+            ),
           ),
         ),
       ),
