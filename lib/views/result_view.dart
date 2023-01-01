@@ -14,7 +14,7 @@ class ResultView extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Text(
+          SelectableText(
             omikujiState.fortune,
             style: const TextStyle(
               fontSize: 64.0,
@@ -22,7 +22,7 @@ class ResultView extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 32.0),
-          Text(
+          SelectableText(
             '${omikujiState.kanjiYearText}年は\n「${omikujiState.message}」\nな一年になるでしょう',
             textAlign: TextAlign.center,
             style: const TextStyle(fontSize: 32.0),

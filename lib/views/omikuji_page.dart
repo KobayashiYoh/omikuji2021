@@ -17,7 +17,7 @@ class OmikujiPage extends ConsumerWidget {
     final audioNotifier = ref.watch(audioProvider.notifier);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('おみくじ'),
+        title: const SelectableText('おみくじ'),
         actions: [
           IconButton(
             onPressed: audioNotifier.onPressedMuteButton,
@@ -46,7 +46,7 @@ class OmikujiPage extends ConsumerWidget {
                 height: 48.0,
                 child: ElevatedButton(
                   onPressed: omikujiNotifier.drawOmikuji,
-                  child: const Text(
+                  child: const SelectableText(
                     'おみくじを引く',
                     style: TextStyle(
                       fontSize: 20.0,
