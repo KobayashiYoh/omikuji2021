@@ -9,6 +9,6 @@ class LoadingView extends StatelessWidget {
     if (Theme.of(context).platform == TargetPlatform.iOS) {
       return const CupertinoActivityIndicator();
     }
-    return const CircularProgressIndicator();
+    return CircularProgressIndicator(color: Colors.indigo[900]);
   }
 }
