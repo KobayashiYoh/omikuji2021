@@ -18,6 +18,7 @@ class OmikujiPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const SelectableText('おみくじ'),
+        backgroundColor: Colors.indigo[900],
         actions: [
           IconButton(
             onPressed: audioNotifier.onPressedMuteButton,
@@ -46,6 +47,9 @@ class OmikujiPage extends ConsumerWidget {
                 height: 48.0,
                 child: ElevatedButton(
                   onPressed: omikujiNotifier.drawOmikuji,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.indigo[900],
+                  ),
                   child: const SelectableText(
                     'おみくじを引く',
                     style: TextStyle(

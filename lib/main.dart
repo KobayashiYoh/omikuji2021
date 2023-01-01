@@ -17,11 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'おみくじ',
-      theme: ThemeData(
-        fontFamily: 'YujiSyuku',
-        colorScheme:
-            ThemeData().colorScheme.copyWith(primary: Colors.indigo[900]),
-      ),
+      theme: ThemeData(fontFamily: 'YujiSyuku'),
       debugShowCheckedModeBanner: false,
       home: const OmikujiPage(),
     );
