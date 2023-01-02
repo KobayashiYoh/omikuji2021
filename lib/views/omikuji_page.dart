@@ -18,7 +18,7 @@ class OmikujiPage extends ConsumerStatefulWidget {
 class OmikujiPageState extends ConsumerState<OmikujiPage> {
   void _onPressedStartButton() {
     final notifier = ref.read(audioProvider.notifier);
-    notifier.onPressedMuteButton();
+    notifier.switchMute();
     Navigator.pop(context);
   }
 
@@ -55,7 +55,7 @@ class OmikujiPageState extends ConsumerState<OmikujiPage> {
           backgroundColor: Colors.indigo[900],
           actions: [
             IconButton(
-              onPressed: audioNotifier.onPressedMuteButton,
+              onPressed: audioNotifier.switchMute,
               icon: audioState.isMute
                   ? const Icon(Icons.volume_off_outlined)
                   : const Icon(Icons.volume_up_outlined),
