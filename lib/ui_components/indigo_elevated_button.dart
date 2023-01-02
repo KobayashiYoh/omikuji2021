@@ -5,9 +5,11 @@ class IndigoElevatedButton extends StatelessWidget {
     Key? key,
     required this.onPressed,
     required this.buttonText,
+    this.fontSize,
   }) : super(key: key);
   final void Function()? onPressed;
   final String buttonText;
+  final double? fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +20,8 @@ class IndigoElevatedButton extends StatelessWidget {
       ),
       child: Text(
         buttonText,
-        style: const TextStyle(
-          fontSize: 20.0,
+        style: TextStyle(
+          fontSize: fontSize,
           color: Colors.white,
         ),
       ),

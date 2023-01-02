@@ -82,6 +82,7 @@ class OmikujiPageState extends ConsumerState<OmikujiPage> {
                   child: IndigoElevatedButton(
                     onPressed: omikujiNotifier.drawOmikuji,
                     buttonText: 'おみくじを引く',
+                    fontSize: 20.0,
                   ),
                 ),
                 const SizedBox(height: 32.0),
