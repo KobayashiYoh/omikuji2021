@@ -12,7 +12,7 @@ class AudioNotifier extends StateNotifier<AudioState> {
   final AudioPlayer sePlayer = AudioPlayer();
   AudioNotifier() : super(const AudioState(isMute: true)) {
     bgmPlayer.setReleaseMode(ReleaseMode.loop);
-    bgmPlayer.setVolume(0.2);
+    bgmPlayer.setVolume(0.15);
     if (!kIsWeb) {
       switchMute();
     }
