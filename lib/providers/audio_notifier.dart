@@ -12,9 +12,9 @@ class AudioNotifier extends StateNotifier<AudioState> {
   final AudioPlayer sePlayer = AudioPlayer();
   AudioNotifier() : super(const AudioState(isMute: true)) {
     bgmPlayer.setReleaseMode(ReleaseMode.loop);
-    bgmPlayer.setVolume(0.2);
+    bgmPlayer.setVolume(0.15);
     if (!kIsWeb) {
-      onPressedMuteButton();
+      switchMute();
     }
   }
 
@@ -38,7 +38,7 @@ class AudioNotifier extends StateNotifier<AudioState> {
     _playSe(soundPath);
   }
 
-  void onPressedMuteButton() {
+  void switchMute() {
     if (state.isMute) {
       bgmPlayer.play(AssetSource(SoundPath.bgm));
       _setMute(false);
