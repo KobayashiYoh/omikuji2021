@@ -42,5 +42,11 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# lock
+*.lock
+
+# metadata
+.metadata
+
 # freezed
 *.freezed.dart
