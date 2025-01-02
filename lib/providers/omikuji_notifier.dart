@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:english_words/english_words.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:omikuji_app/constants/sound_path.dart';
 import 'package:omikuji_app/models/omikuji_state.dart';
 import 'package:omikuji_app/providers/audio_notifier.dart';
