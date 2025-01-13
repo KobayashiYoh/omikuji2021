@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'おみくじ',
       theme: appTheme,
-      home: const OmikujiPage(),
+      home: OmikujiPage(),
     );
   }
 }
