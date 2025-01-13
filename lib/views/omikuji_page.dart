@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:omikuji_app/providers/audio_notifier.dart';
 import 'package:omikuji_app/providers/omikuji_notifier.dart';
-import 'package:omikuji_app/ui_components/indigo_elevated_button.dart';
 import 'package:omikuji_app/ui_components/web_initial_alert_dialog.dart';
 import 'package:omikuji_app/views/loading_view.dart';
 import 'package:omikuji_app/views/network_error_view.dart';
@@ -79,10 +78,13 @@ class OmikujiPageState extends ConsumerState<OmikujiPage> {
                 const Spacer(),
                 SizedBox(
                   height: 48.0,
-                  child: IndigoElevatedButton(
+                  child: ElevatedButton(
                     onPressed: omikujiNotifier.drawOmikuji,
-                    buttonText: 'おみくじを引く',
-                    fontSize: 20.0,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.indigo[900],
+                      textStyle: const TextStyle(fontSize: 20.0),
+                    ),
+                    child: Text('おみくじを引く'),
                   ),
                 ),
                 const SizedBox(height: 32.0),
