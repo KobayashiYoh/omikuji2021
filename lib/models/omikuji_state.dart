@@ -21,7 +21,7 @@ extension OmikujiStateExtention on OmikujiState {
   int get animationDurationSeconds => opacityLevel == 0 ? 0 : 2;
 }
 
-const OmikujiState kInitialOmikujiState = OmikujiState(
+const OmikujiState initialOmikujiState = OmikujiState(
   isLoading: false,
   hasError: false,
   fortune: null,

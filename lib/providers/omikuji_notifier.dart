@@ -2,19 +2,24 @@ import 'package:english_words/english_words.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:omikuji_app/constants/sound_path.dart';
 import 'package:omikuji_app/models/omikuji_state.dart';
+import 'package:omikuji_app/repository/settings_repository.dart';
 import 'package:omikuji_app/utils/omikuji_util.dart';
 import 'package:translator/translator.dart';
 
 import '../models/fortune.dart';
 
 final omikujiProvider = StateNotifierProvider<OmikujiNotifier, OmikujiState>(
-    (ref) => OmikujiNotifier(ref: ref));
+    (ref) => OmikujiNotifier());
+
+final _initialOmikujiState = initialOmikujiState.copyWith(
+  isMute: SettingsRepository.instance.readIsMute(),
+);
 
 class OmikujiNotifier extends StateNotifier<OmikujiState> {
-  OmikujiNotifier({required this.ref}) : super(kInitialOmikujiState) {
+  OmikujiNotifier() : super(_initialOmikujiState) {
     _setKanjiYearText();
   }
-  final Ref ref;
+
   String resultSoundPath = SoundPath.shamisen;
 
   void _setLoading(bool value) {
@@ -39,6 +44,7 @@ class OmikujiNotifier extends StateNotifier<OmikujiState> {
 
   void switchMute() {
     _setMute(!state.isMute);
+    SettingsRepository.instance.writeIsMute(state.isMute);
   }
 
   void _setKanjiYearText() {
