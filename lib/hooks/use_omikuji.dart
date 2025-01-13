@@ -8,9 +8,15 @@ import 'package:translator/translator.dart';
 import '../models/fortune.dart';
 
 class UseOmikuji {
-  UseOmikuji({required this.state});
+  UseOmikuji({
+    required this.state,
+    required this.switchMute,
+    required this.drawOmikuji,
+  });
 
   final OmikujiState state;
+  final void Function() switchMute;
+  final Future<Fortune> Function() drawOmikuji;
 }
 
 UseOmikuji useOmikuji() {
@@ -80,7 +86,7 @@ UseOmikuji useOmikuji() {
     return translation.toString();
   }
 
-  Future<void> drawOmikuji() async {
+  Future<Fortune> drawOmikuji() async {
     setOpacityLevel(0.0);
     generateFortune();
     generateKanjiYearText();
@@ -89,13 +95,13 @@ UseOmikuji useOmikuji() {
     await Future.delayed(const Duration(milliseconds: 500));
     setOpacityLevel(1.0);
     await Future.delayed(const Duration(milliseconds: 500));
+    return state.value.fortune ?? Fortune.misprint;
   }
 
   return UseOmikuji(
-    state: state.value.copyWith(
-      switchMute: switchMute,
-      drawOmikuji: drawOmikuji,
-    ),
+    state: state.value,
+    switchMute: switchMute,
+    drawOmikuji: drawOmikuji,
   );
 }
 

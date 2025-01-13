@@ -29,7 +29,7 @@ class OmikujiPage extends HookWidget {
   }
 
   void _onPressedSwitchMute(UseOmikuji useOmikuji) {
-    useOmikuji.state.switchMute();
+    useOmikuji.switchMute();
     final isMute = !useOmikuji.state.isMute;
     if (isMute) {
       _bgmPlayer.stop();
@@ -48,11 +48,8 @@ class OmikujiPage extends HookWidget {
 
   Future<void> _onPressedDrawOmikuji(UseOmikuji useOmikuji) async {
     await _playSe(SoundPath.tap, useOmikuji.state.isMute);
-    await useOmikuji.state.drawOmikuji();
-    await _playSe(
-      useOmikuji.state.fortune?.soundPath ?? SoundPath.shamisen,
-      useOmikuji.state.isMute,
-    );
+    final generatedFortune = await useOmikuji.drawOmikuji();
+    await _playSe(generatedFortune.soundPath, useOmikuji.state.isMute);
   }
 
   Future<void> _initialize(BuildContext context, bool isMute) async {

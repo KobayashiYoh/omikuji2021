@@ -14,8 +14,6 @@ class OmikujiState with _$OmikujiState {
     required String kanjiYearText,
     required double opacityLevel,
     required bool isMute,
-    required void Function() switchMute,
-    required Future<void> Function() drawOmikuji,
   }) = _OmikujiState;
 }
 
@@ -23,7 +21,7 @@ extension OmikujiStateExtention on OmikujiState {
   int get animationDurationSeconds => opacityLevel == 0 ? 0 : 2;
 }
 
-OmikujiState initialOmikujiState = OmikujiState(
+OmikujiState initialOmikujiState = const OmikujiState(
   isLoading: false,
   hasError: false,
   fortune: null,
@@ -31,6 +29,4 @@ OmikujiState initialOmikujiState = OmikujiState(
   kanjiYearText: '',
   opacityLevel: 0.0,
   isMute: false,
-  switchMute: () {},
-  drawOmikuji: () async {},
 );
