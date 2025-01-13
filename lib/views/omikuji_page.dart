@@ -1,12 +1,14 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:omikuji_app/providers/audio_notifier.dart';
 import 'package:omikuji_app/providers/omikuji_notifier.dart';
 import 'package:omikuji_app/ui_components/web_initial_alert_dialog.dart';
 import 'package:omikuji_app/views/loading_view.dart';
 import 'package:omikuji_app/views/network_error_view.dart';
 import 'package:omikuji_app/views/result_view.dart';
+
+import '../constants/sound_path.dart';
 
 class OmikujiPage extends ConsumerStatefulWidget {
   const OmikujiPage({Key? key}) : super(key: key);
@@ -15,46 +17,86 @@ class OmikujiPage extends ConsumerStatefulWidget {
 }
 
 class OmikujiPageState extends ConsumerState<OmikujiPage> {
-  void _onPressedStartButton() {
-    final notifier = ref.read(audioProvider.notifier);
+  final _bgmPlayer = AudioPlayer();
+  final _sePlayer = AudioPlayer();
+
+  Future<void> _playSe(String soundPath) async {
+    final state = ref.read(omikujiProvider);
+    if (state.isMute) return;
+    await _sePlayer.stop();
+    await _sePlayer.play(AssetSource(soundPath));
+  }
+
+  Future<void> _playBgm(String soundPath) async {
+    final state = ref.read(omikujiProvider);
+    if (state.isMute) return;
+    await _bgmPlayer.stop();
+    await _bgmPlayer.play(AssetSource(soundPath));
+  }
+
+  void _onPressedSwitchMute() {
+    final notifier = ref.read(omikujiProvider.notifier);
     notifier.switchMute();
+    final state = ref.read(omikujiProvider);
+    print('isMute: ${state.isMute}');
+    if (state.isMute) {
+      _bgmPlayer.stop();
+      _sePlayer.stop();
+      return;
+    }
+    _playBgm(SoundPath.bgm);
+    _playSe(SoundPath.tap);
+  }
+
+  void _onPressedStartButton() {
+    _playSe(SoundPath.tap);
     Navigator.pop(context);
   }
 
-  void _showWebInitialAlertDialog() {
-    Future(() {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => WebInitialAlertDialog(
-          onPressed: _onPressedStartButton,
-        ),
-      );
-    });
+  void _onPressedDrawOmikuji() async {
+    _playSe(SoundPath.tap);
+    final notifier = ref.read(omikujiProvider.notifier);
+    await notifier.drawOmikuji();
   }
 
   @override
   void initState() {
     super.initState();
-    if (kIsWeb) {
-      _showWebInitialAlertDialog();
-    }
+    _bgmPlayer.setReleaseMode(ReleaseMode.loop);
+    _bgmPlayer.setVolume(0.15);
+    Future(() {
+      if (kIsWeb) {
+        if (!mounted) return;
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => WebInitialAlertDialog(
+            onPressed: _onPressedStartButton,
+          ),
+        );
+      }
+      _playBgm(SoundPath.bgm);
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _bgmPlayer.dispose();
+    _sePlayer.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final omikujiState = ref.watch(omikujiProvider);
-    final audioState = ref.watch(audioProvider);
-    final omikujiNotifier = ref.watch(omikujiProvider.notifier);
-    final audioNotifier = ref.watch(audioProvider.notifier);
+    final state = ref.watch(omikujiProvider);
     return SelectionArea(
       child: Scaffold(
         appBar: AppBar(
           title: const Text('へんなおみくじ'),
           actions: [
             IconButton(
-              onPressed: audioNotifier.switchMute,
-              icon: audioState.isMute
+              onPressed: _onPressedSwitchMute,
+              icon: state.isMute
                   ? const Icon(Icons.volume_off_outlined)
                   : const Icon(Icons.volume_up_outlined),
             ),
@@ -68,17 +110,17 @@ class OmikujiPageState extends ConsumerState<OmikujiPage> {
               children: <Widget>[
                 const Spacer(),
                 Center(
-                  child: omikujiState.isLoading
+                  child: state.isLoading
                       ? const LoadingView()
-                      : omikujiState.hasError
+                      : state.hasError
                           ? const NetworkErrorView()
-                          : ResultView(omikujiState: omikujiState),
+                          : ResultView(omikujiState: state),
                 ),
                 const Spacer(),
                 SizedBox(
                   height: 48.0,
                   child: ElevatedButton(
-                    onPressed: omikujiNotifier.drawOmikuji,
+                    onPressed: _onPressedDrawOmikuji,
                     child: const Text('おみくじを引く'),
                   ),
                 ),

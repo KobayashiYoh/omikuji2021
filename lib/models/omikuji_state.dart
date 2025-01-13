@@ -11,6 +11,7 @@ class OmikujiState with _$OmikujiState {
     required String message,
     required String kanjiYearText,
     required double opacityLevel,
+    required bool isMute,
   }) = _OmikujiState;
 }
 
@@ -25,4 +26,5 @@ const OmikujiState kInitialOmikujiState = OmikujiState(
   message: '',
   kanjiYearText: '',
   opacityLevel: 0.0,
+  isMute: false,
 );

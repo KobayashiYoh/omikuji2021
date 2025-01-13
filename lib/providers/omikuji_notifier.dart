@@ -4,7 +4,6 @@ import 'package:english_words/english_words.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:omikuji_app/constants/sound_path.dart';
 import 'package:omikuji_app/models/omikuji_state.dart';
-import 'package:omikuji_app/providers/audio_notifier.dart';
 import 'package:translator/translator.dart';
 
 final omikujiProvider = StateNotifierProvider<OmikujiNotifier, OmikujiState>(
@@ -27,6 +26,14 @@ class OmikujiNotifier extends StateNotifier<OmikujiState> {
 
   void _setOpacityLevel(double value) {
     state = state.copyWith(opacityLevel: value);
+  }
+
+  void _setMute(bool value) {
+    state = state.copyWith(isMute: value);
+  }
+
+  void switchMute() {
+    _setMute(!state.isMute);
   }
 
   void _setKanjiYearText() {
@@ -123,8 +130,6 @@ class OmikujiNotifier extends StateNotifier<OmikujiState> {
   }
 
   Future<void> drawOmikuji() async {
-    final audioNotifier = ref.read(audioProvider.notifier);
-    audioNotifier.playTapSe();
     _setOpacityLevel(0.0);
     _generateFortune();
     final String message = await _generateMessage();
@@ -134,6 +139,5 @@ class OmikujiNotifier extends StateNotifier<OmikujiState> {
     await Future.delayed(const Duration(milliseconds: 500));
     _setOpacityLevel(1.0);
     await Future.delayed(const Duration(milliseconds: 500));
-    audioNotifier.playResultSE(resultSoundPath);
   }
 }
