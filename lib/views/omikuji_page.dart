@@ -38,7 +38,6 @@ class OmikujiPageState extends ConsumerState<OmikujiPage> {
     final notifier = ref.read(omikujiProvider.notifier);
     notifier.switchMute();
     final state = ref.read(omikujiProvider);
-    print('isMute: ${state.isMute}');
     if (state.isMute) {
       _bgmPlayer.stop();
       _sePlayer.stop();
