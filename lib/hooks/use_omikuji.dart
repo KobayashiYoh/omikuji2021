@@ -1,9 +1,7 @@
-import 'package:english_words/english_words.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:omikuji_app/models/omikuji_state.dart';
 import 'package:omikuji_app/repository/settings_repository.dart';
 import 'package:omikuji_app/utils/omikuji_util.dart';
-import 'package:translator/translator.dart';
 
 import '../models/fortune.dart';
 
@@ -68,30 +66,24 @@ UseOmikuji useOmikuji() {
     setFortune(generatedFortune);
   }
 
-  Future<String> generateMessage() async {
-    final translator = GoogleTranslator();
-    final Translation translation;
-    // スネークケースで英単語のペアを生成（アンダーバーを半角スペースに置き換える）
-    final String wordPair = WordPair.random().asSnakeCase.replaceAll('_', ' ');
-    setLoading(true);
-    setError(false);
-    try {
-      translation = await translator.translate(wordPair, from: 'en', to: 'ja');
-    } catch (e) {
-      setError(true);
-      throw Exception(e);
-    } finally {
-      setLoading(false);
-    }
-    return translation.toString();
+  Future<void> generateMessage() async {
+    final generatedMessage = await OmikujiUtil.generateMessage();
+    setMessage(generatedMessage);
   }
 
   Future<Fortune> drawOmikuji() async {
     setOpacityLevel(0.0);
     generateFortune();
     generateKanjiYearText();
-    final String message = await generateMessage();
-    setMessage(message);
+    setLoading(true);
+    setError(false);
+    try {
+      await generateMessage();
+    } catch (e) {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
     await Future.delayed(const Duration(milliseconds: 500));
     setOpacityLevel(1.0);
     await Future.delayed(const Duration(milliseconds: 500));

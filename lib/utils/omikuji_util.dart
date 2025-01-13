@@ -1,5 +1,8 @@
 import 'dart:math' as math;
 
+import 'package:english_words/english_words.dart';
+import 'package:translator/translator.dart';
+
 import '../models/fortune.dart';
 
 class OmikujiUtil {
@@ -29,6 +32,15 @@ class OmikujiUtil {
     } else {
       return Fortune.misprint;
     }
+  }
+
+  static Future<String> generateMessage() async {
+    final translator = GoogleTranslator();
+    final Translation translation;
+    // スネークケースで英単語のペアを生成（アンダーバーを半角スペースに置き換える）
+    final wordPair = WordPair.random().asSnakeCase.replaceAll('_', ' ');
+    translation = await translator.translate(wordPair, from: 'en', to: 'ja');
+    return translation.toString();
   }
 
   static String generateKanjiYearText() {
