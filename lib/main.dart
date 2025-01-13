@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:omikuji_app/theme/app_theme.dart';
 import 'package:omikuji_app/views/omikuji_page.dart';
 
 void main() {
@@ -17,8 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'おみくじ',
-      theme: ThemeData(fontFamily: 'YujiSyuku'),
-      debugShowCheckedModeBanner: false,
+      theme: appTheme,
       home: const OmikujiPage(),
     );
   }
