@@ -7,8 +7,8 @@ enum Fortune {
   suekichi('末吉', SoundPath.shamisen),
   kichi('吉', SoundPath.shamisen),
   shokichi('小吉', SoundPath.shamisen),
-  chukichi('中吉', SoundPath.chukichiDaikyo),
-  daikichi('大吉', SoundPath.chukichiDaikyo),
+  chukichi('中吉', SoundPath.chukichiDaikichi),
+  daikichi('大吉', SoundPath.chukichiDaikichi),
   gohun('豪運', SoundPath.gohun),
   misprint('印刷ミス', SoundPath.shamisen);
 

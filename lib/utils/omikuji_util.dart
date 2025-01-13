@@ -30,4 +30,21 @@ class OmikujiUtil {
       return Fortune.misprint;
     }
   }
+
+  static String generateKanjiYearText() {
+    final DateTime now = DateTime.now();
+    final String yearText = now.year.toString();
+    final String kanjiYearText = yearText
+        .replaceAll('0', '〇')
+        .replaceAll('1', '一')
+        .replaceAll('2', '二')
+        .replaceAll('3', '三')
+        .replaceAll('4', '四')
+        .replaceAll('5', '五')
+        .replaceAll('6', '六')
+        .replaceAll('7', '七')
+        .replaceAll('8', '八')
+        .replaceAll('9', '九');
+    return kanjiYearText;
+  }
 }
