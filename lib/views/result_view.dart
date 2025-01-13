@@ -15,7 +15,7 @@ class ResultView extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            omikujiState.fortune,
+            omikujiState.fortune?.text ?? '',
             style: const TextStyle(
               fontSize: 64.0,
               fontWeight: FontWeight.bold,
