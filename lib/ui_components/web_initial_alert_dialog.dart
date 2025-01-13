@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:omikuji_app/ui_components/indigo_elevated_button.dart';
 
 class WebInitialAlertDialog extends StatelessWidget {
   const WebInitialAlertDialog({
@@ -15,9 +17,9 @@ class WebInitialAlertDialog extends StatelessWidget {
         title: const Text('おみくじ'),
         content: const Text('ボタンをタップしておみくじを引こう'),
         actions: [
-          ElevatedButton(
+          IndigoElevatedButton(
             onPressed: onPressed,
-            child: const Text('はじめる'),
+            buttonText: 'はじめる',
           ),
         ],
       ),
