@@ -12,7 +12,7 @@ class OmikujiUtil {
     final rand = math.Random();
     final fortuneId = rand.nextInt(100) + 1;
     if (fortuneId == 1) {
-      return Fortune.numa;
+      return Fortune.daidaikyo;
     } else if (fortuneId <= 10) {
       return Fortune.daikyo;
     } else if (fortuneId <= 25) {
@@ -28,7 +28,7 @@ class OmikujiUtil {
     } else if (fortuneId <= 99) {
       return Fortune.daikichi;
     } else if (fortuneId == 100) {
-      return Fortune.gohun;
+      return Fortune.daidaikichi;
     } else {
       return Fortune.misprint;
     }
@@ -41,6 +41,13 @@ class OmikujiUtil {
     final wordPair = WordPair.random().asSnakeCase.replaceAll('_', ' ');
     translation = await translator.translate(wordPair, from: 'en', to: 'ja');
     return translation.toString();
+  }
+
+  static String generateAdvice(Fortune fortune) {
+    final rand = math.Random();
+    final adviceIndex = rand.nextInt(fortune.advices.length);
+    final advice = fortune.advices.elementAt(adviceIndex);
+    return advice;
   }
 
   static String generateKanjiYearText() {

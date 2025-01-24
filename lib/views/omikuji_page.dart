@@ -22,10 +22,10 @@ class OmikujiPage extends HookWidget {
     await _sePlayer.play(AssetSource(soundPath));
   }
 
-  Future<void> _playBgm(String soundPath, bool isMute) async {
+  Future<void> _playBgm(bool isMute) async {
     if (isMute) return;
     await _bgmPlayer.stop();
-    await _bgmPlayer.play(AssetSource(soundPath));
+    await _bgmPlayer.play(AssetSource(SoundPath.bgm));
   }
 
   void _onPressedSwitchMute(UseOmikuji useOmikuji) {
@@ -36,7 +36,7 @@ class OmikujiPage extends HookWidget {
       _sePlayer.stop();
       return;
     }
-    _playBgm(SoundPath.bgm, isMute);
+    _playBgm(isMute);
     _playSe(SoundPath.tap, isMute);
   }
 
@@ -66,7 +66,7 @@ class OmikujiPage extends HookWidget {
           ),
         );
       }
-      await _playBgm(SoundPath.bgm, isMute);
+      await _playBgm(isMute);
     });
   }
 
@@ -115,7 +115,7 @@ class OmikujiPage extends HookWidget {
                   height: 48.0,
                   child: ElevatedButton(
                     onPressed: () => _onPressedDrawOmikuji(useState),
-                    child: const Text('おみくじを引く'),
+                    child: Text(state.isFirstDrawing ? 'おみくじを引く' : 'もう一度引いちゃう'),
                   ),
                 ),
                 const SizedBox(height: 32.0),
