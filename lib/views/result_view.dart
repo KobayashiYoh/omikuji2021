@@ -26,7 +26,20 @@ class ResultView extends StatelessWidget {
             '${state.kanjiYearText}年は\n「${state.message}」\nな一年になるでしょう',
             textAlign: TextAlign.center,
             style: const TextStyle(fontSize: 32.0),
-          )
+          ),
+          const SizedBox(height: 32.0),
+          Text(
+            '学問: ${state.academiaAdvice}',
+            style: const TextStyle(fontSize: 20.0),
+          ),
+          Text(
+            '商売: ${state.businessAdvice}',
+            style: const TextStyle(fontSize: 20.0),
+          ),
+          Text(
+            '恋愛: ${state.loveAdvice}',
+            style: const TextStyle(fontSize: 20.0),
+          ),
         ],
       ),
     );

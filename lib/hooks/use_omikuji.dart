@@ -39,6 +39,18 @@ UseOmikuji useOmikuji() {
     state.value = state.value.copyWith(message: message);
   }
 
+  void setAcademiaAdvice(String academiaAdvice) {
+    state.value = state.value.copyWith(academiaAdvice: academiaAdvice);
+  }
+
+  void setBusinessAdvice(String businessAdvice) {
+    state.value = state.value.copyWith(businessAdvice: businessAdvice);
+  }
+
+  void setLoveAdvice(String loveAdvice) {
+    state.value = state.value.copyWith(loveAdvice: loveAdvice);
+  }
+
   void setKanjiYearText(String kanjiYearText) {
     state.value = state.value.copyWith(kanjiYearText: kanjiYearText);
   }
@@ -71,10 +83,20 @@ UseOmikuji useOmikuji() {
     setMessage(generatedMessage);
   }
 
+  void generateAdvice() {
+    final generatedAcademiaAdvice = OmikujiUtil.generateAdvice();
+    setAcademiaAdvice(generatedAcademiaAdvice);
+    final generatedBusinessAdvice = OmikujiUtil.generateAdvice();
+    setBusinessAdvice(generatedBusinessAdvice);
+    final generatedLoveAdvice = OmikujiUtil.generateAdvice();
+    setLoveAdvice(generatedLoveAdvice);
+  }
+
   Future<Fortune> drawOmikuji() async {
     setOpacityLevel(0.0);
     generateFortune();
     generateKanjiYearText();
+    generateAdvice();
     setLoading(true);
     setError(false);
     try {
