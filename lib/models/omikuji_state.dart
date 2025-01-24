@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-
-import 'fortune.dart';
+import 'package:omikuji_app/models/omikuji.dart';
 
 part 'omikuji_state.freezed.dart';
 
@@ -9,11 +8,7 @@ class OmikujiState with _$OmikujiState {
   const factory OmikujiState({
     required bool isLoading,
     required bool hasError,
-    required Fortune? fortune,
-    required String message,
-    required String academiaAdvice,
-    required String businessAdvice,
-    required String loveAdvice,
+    required Omikuji omikuji,
     required String kanjiYearText,
     required double opacityLevel,
     required bool isMute,
@@ -24,14 +19,10 @@ extension OmikujiStateExtention on OmikujiState {
   int get animationDurationSeconds => opacityLevel == 0 ? 0 : 2;
 }
 
-OmikujiState initialOmikujiState = const OmikujiState(
+const OmikujiState initialOmikujiState = OmikujiState(
   isLoading: false,
   hasError: false,
-  fortune: null,
-  message: '',
-  academiaAdvice: '',
-  businessAdvice: '',
-  loveAdvice: '',
+  omikuji: initialOmikuji,
   kanjiYearText: '',
   opacityLevel: 0.0,
   isMute: false,

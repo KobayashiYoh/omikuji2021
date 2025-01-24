@@ -17,7 +17,7 @@ class ResultView extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            state.fortune?.text ?? '',
+            state.omikuji.fortune?.text ?? '',
             style: const TextStyle(
               fontSize: 64.0,
               fontWeight: FontWeight.bold,
@@ -26,22 +26,22 @@ class ResultView extends StatelessWidget {
           const SizedBox(height: 32.0),
           Text(
             now.isNewYear
-                ? '${state.kanjiYearText}年は\n「${state.message}」\nな一年になるでしょう'
-                : 'あなたの運勢は\n「${state.message}」な\n感じになるでしょう',
+                ? '${state.kanjiYearText}年は\n「${state.omikuji.message}」\nな一年になるでしょう'
+                : 'あなたの運勢は\n「${state.omikuji.message}」な\n感じになるでしょう',
             textAlign: TextAlign.center,
             style: const TextStyle(fontSize: 32.0),
           ),
           const SizedBox(height: 32.0),
           Text(
-            '学問: ${state.academiaAdvice}',
+            '学問: ${state.omikuji.academiaAdvice}',
             style: const TextStyle(fontSize: 20.0),
           ),
           Text(
-            '商売: ${state.businessAdvice}',
+            '商売: ${state.omikuji.businessAdvice}',
             style: const TextStyle(fontSize: 20.0),
           ),
           Text(
-            '恋愛: ${state.loveAdvice}',
+            '恋愛: ${state.omikuji.loveAdvice}',
             style: const TextStyle(fontSize: 20.0),
           ),
         ],

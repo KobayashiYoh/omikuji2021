@@ -32,23 +32,33 @@ UseOmikuji useOmikuji() {
   }
 
   void setFortune(Fortune fortune) {
-    state.value = state.value.copyWith(fortune: fortune);
+    state.value = state.value.copyWith(
+      omikuji: state.value.omikuji.copyWith(fortune: fortune),
+    );
   }
 
   void setMessage(String message) {
-    state.value = state.value.copyWith(message: message);
+    state.value = state.value.copyWith(
+      omikuji: state.value.omikuji.copyWith(message: message),
+    );
   }
 
   void setAcademiaAdvice(String academiaAdvice) {
-    state.value = state.value.copyWith(academiaAdvice: academiaAdvice);
+    state.value = state.value.copyWith(
+      omikuji: state.value.omikuji.copyWith(academiaAdvice: academiaAdvice),
+    );
   }
 
   void setBusinessAdvice(String businessAdvice) {
-    state.value = state.value.copyWith(businessAdvice: businessAdvice);
+    state.value = state.value.copyWith(
+      omikuji: state.value.omikuji.copyWith(businessAdvice: businessAdvice),
+    );
   }
 
   void setLoveAdvice(String loveAdvice) {
-    state.value = state.value.copyWith(loveAdvice: loveAdvice);
+    state.value = state.value.copyWith(
+      omikuji: state.value.omikuji.copyWith(loveAdvice: loveAdvice),
+    );
   }
 
   void setKanjiYearText(String kanjiYearText) {
@@ -110,7 +120,7 @@ UseOmikuji useOmikuji() {
     await Future.delayed(const Duration(milliseconds: 500));
     setOpacityLevel(1.0);
     await Future.delayed(const Duration(milliseconds: 500));
-    return state.value.fortune ?? Fortune.misprint;
+    return state.value.omikuji.fortune ?? Fortune.misprint;
   }
 
   return UseOmikuji(
