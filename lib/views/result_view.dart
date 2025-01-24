@@ -8,6 +8,9 @@ class ResultView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (state.omikuji.fortune == null) {
+      return _EmptyResultView();
+    }
     final now = DateTime.now();
     return AnimatedOpacity(
       opacity: state.opacityLevel,
@@ -46,6 +49,27 @@ class ResultView extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _EmptyResultView extends StatelessWidget {
+  const _EmptyResultView();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      children: [
+        Text(
+          'ボタンをタップして\nおみくじを引く',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 18.0,
+          ),
+        ),
+        SizedBox(height: 8.0),
+        Icon(Icons.arrow_downward),
+      ],
     );
   }
 }
