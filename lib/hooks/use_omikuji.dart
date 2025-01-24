@@ -73,9 +73,10 @@ UseOmikuji useOmikuji() {
     setKanjiYearText(generatedKanjiYearText);
   }
 
-  void generateFortune() {
+  Fortune generateFortune() {
     final generatedFortune = OmikujiUtil.generateFortune();
     setFortune(generatedFortune);
+    return generatedFortune;
   }
 
   Future<void> generateMessage() async {
@@ -83,20 +84,20 @@ UseOmikuji useOmikuji() {
     setMessage(generatedMessage);
   }
 
-  void generateAdvice() {
-    final generatedAcademiaAdvice = OmikujiUtil.generateAdvice();
+  void generateAdvice(Fortune fortune) {
+    final generatedAcademiaAdvice = OmikujiUtil.generateAdvice(fortune);
     setAcademiaAdvice(generatedAcademiaAdvice);
-    final generatedBusinessAdvice = OmikujiUtil.generateAdvice();
+    final generatedBusinessAdvice = OmikujiUtil.generateAdvice(fortune);
     setBusinessAdvice(generatedBusinessAdvice);
-    final generatedLoveAdvice = OmikujiUtil.generateAdvice();
+    final generatedLoveAdvice = OmikujiUtil.generateAdvice(fortune);
     setLoveAdvice(generatedLoveAdvice);
   }
 
   Future<Fortune> drawOmikuji() async {
     setOpacityLevel(0.0);
-    generateFortune();
+    final fortune = generateFortune();
     generateKanjiYearText();
-    generateAdvice();
+    generateAdvice(fortune);
     setLoading(true);
     setError(false);
     try {

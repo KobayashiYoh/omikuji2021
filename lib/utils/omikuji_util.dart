@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 
 import 'package:english_words/english_words.dart';
-import 'package:omikuji_app/constants/advices.dart';
 import 'package:translator/translator.dart';
 
 import '../models/fortune.dart';
@@ -44,10 +43,10 @@ class OmikujiUtil {
     return translation.toString();
   }
 
-  static String generateAdvice() {
+  static String generateAdvice(Fortune fortune) {
     final rand = math.Random();
-    final adviceIndex = rand.nextInt(advices.length) + 1;
-    final advice = advices.elementAt(adviceIndex);
+    final adviceIndex = rand.nextInt(fortune.advices.length);
+    final advice = fortune.advices.elementAt(adviceIndex);
     return advice;
   }
 
