@@ -8,6 +8,7 @@ class OmikujiState with _$OmikujiState {
   const factory OmikujiState({
     required bool isLoading,
     required bool hasError,
+    required bool isFirstDrawing,
     required Omikuji omikuji,
     required String kanjiYearText,
     required double opacityLevel,
@@ -22,6 +23,7 @@ extension OmikujiStateExtention on OmikujiState {
 const OmikujiState initialOmikujiState = OmikujiState(
   isLoading: false,
   hasError: false,
+  isFirstDrawing: true,
   omikuji: initialOmikuji,
   kanjiYearText: '',
   opacityLevel: 0.0,

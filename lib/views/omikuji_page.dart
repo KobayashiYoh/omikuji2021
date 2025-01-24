@@ -115,7 +115,7 @@ class OmikujiPage extends HookWidget {
                   height: 48.0,
                   child: ElevatedButton(
                     onPressed: () => _onPressedDrawOmikuji(useState),
-                    child: const Text('おみくじを引く'),
+                    child: Text(state.isFirstDrawing ? 'おみくじを引く' : 'もう一度引いちゃう'),
                   ),
                 ),
                 const SizedBox(height: 32.0),

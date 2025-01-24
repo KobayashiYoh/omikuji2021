@@ -31,6 +31,10 @@ UseOmikuji useOmikuji() {
     state.value = state.value.copyWith(hasError: hasError);
   }
 
+  void setFirstDrawing(bool isFirstDrawing) {
+    state.value = state.value.copyWith(isFirstDrawing: isFirstDrawing);
+  }
+
   void setFortune(Fortune fortune) {
     state.value = state.value.copyWith(
       omikuji: state.value.omikuji.copyWith(fortune: fortune),
@@ -120,6 +124,9 @@ UseOmikuji useOmikuji() {
     await Future.delayed(const Duration(milliseconds: 500));
     setOpacityLevel(1.0);
     await Future.delayed(const Duration(milliseconds: 500));
+    if (state.value.isFirstDrawing) {
+      setFirstDrawing(false);
+    }
     return state.value.omikuji.fortune ?? Fortune.misprint;
   }
 
