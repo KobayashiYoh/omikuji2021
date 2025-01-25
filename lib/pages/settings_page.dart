@@ -45,6 +45,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(settingsNotifierProvider);
+    final appVersion = ref.watch(appVersionProvider).value;
+    final appVersionText = 'v $appVersion';
     final contentPadding = MediaQuery.of(context).padding;
     return Scaffold(
       appBar: AppBar(
@@ -82,9 +84,10 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                   ),
                   SettingsTile.navigation(
                     title: const Text(
-                      'hoge',
+                      'アプリバージョン',
                       style: TextStyle(fontFamily: FontFamilies.yujiSyuku),
                     ),
+                    trailing: Text(appVersionText),
                   ),
                 ],
               ),
