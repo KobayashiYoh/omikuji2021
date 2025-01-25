@@ -7,9 +7,11 @@ import 'package:omikuji_app/utils/translator.dart';
 
 import '../models/fortune.dart';
 
+/// おみくじの生成に関するクラス。
 class OmikujiGenerator {
   OmikujiGenerator._();
 
+  /// ランダムで運勢を生成する。
   static Fortune generateFortune() {
     final rand = math.Random();
     final fortuneId = rand.nextInt(100) + 1;
@@ -56,6 +58,7 @@ class OmikujiGenerator {
     return message;
   }
 
+  /// 引数に与えられた運勢を元に事前に定義したランダムなアドバイスのテキストを返す。
   static String generateAdvice(Fortune fortune) {
     final rand = math.Random();
     final adviceIndex = rand.nextInt(fortune.advices.length);
@@ -63,6 +66,7 @@ class OmikujiGenerator {
     return advice;
   }
 
+  /// おみくじの内容を踏まえたメッセージを生成する。
   static Future<String> generateMessage({
     required String fortuneText,
     required String subTitle,
@@ -83,6 +87,7 @@ class OmikujiGenerator {
     return message.replaceAll('\n', ' ');
   }
 
+  /// DateTimeの数字部分を漢数字に変換したテキストを生成する。
   static String generateKanjiYearText(DateTime dateTime) {
     final String yearText = dateTime.year.toString();
     final String kanjiYearText = yearText
