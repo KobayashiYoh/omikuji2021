@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 
-class _FontFamilies {
-  _FontFamilies._();
-
-  static const String yujiSyuku = 'YujiSyuku';
-}
+import '../constants/font_families.dart';
 
 ThemeData appTheme = ThemeData(
   useMaterial3: true,
-  fontFamily: _FontFamilies.yujiSyuku,
+  fontFamily: FontFamilies.yujiSyuku,
   appBarTheme: AppBarTheme(
     backgroundColor: Colors.indigo[900],
     foregroundColor: Colors.white,
@@ -19,7 +15,7 @@ ThemeData appTheme = ThemeData(
       foregroundColor: WidgetStateProperty.all(Colors.white),
       textStyle: WidgetStateProperty.all(
         const TextStyle(
-          fontFamily: _FontFamilies.yujiSyuku,
+          fontFamily: FontFamilies.yujiSyuku,
           fontSize: 18.0,
           fontWeight: FontWeight.bold,
         ),
