@@ -2,12 +2,12 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:omikuji_app/components/loading_view.dart';
+import 'package:omikuji_app/components/network_error_view.dart';
+import 'package:omikuji_app/components/result_view.dart';
 import 'package:omikuji_app/hooks/use_omikuji.dart';
-import 'package:omikuji_app/ui_components/web_initial_alert_dialog.dart';
-import 'package:omikuji_app/views/loading_view.dart';
-import 'package:omikuji_app/views/network_error_view.dart';
-import 'package:omikuji_app/views/result_view.dart';
 
+import '../components/web_initial_alert_dialog.dart';
 import '../constants/sound_path.dart';
 
 class OmikujiPage extends HookWidget {

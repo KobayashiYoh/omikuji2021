@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:omikuji_app/pages/omikuji_page.dart';
 import 'package:omikuji_app/repository/settings_repository.dart';
 import 'package:omikuji_app/theme/app_theme.dart';
-import 'package:omikuji_app/views/omikuji_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
