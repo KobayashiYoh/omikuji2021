@@ -7,8 +7,8 @@ import 'package:omikuji_app/utils/translator.dart';
 
 import '../models/fortune.dart';
 
-class OmikujiUtil {
-  OmikujiUtil._();
+class OmikujiGenerator {
+  OmikujiGenerator._();
 
   static Fortune generateFortune() {
     final rand = math.Random();

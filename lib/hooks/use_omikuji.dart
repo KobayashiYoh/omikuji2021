@@ -1,7 +1,7 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:omikuji_app/models/omikuji.dart';
 import 'package:omikuji_app/models/omikuji_state.dart';
-import 'package:omikuji_app/utils/omikuji_util.dart';
+import 'package:omikuji_app/utils/omikuji_generator.dart';
 
 import '../models/fortune.dart';
 
@@ -42,21 +42,21 @@ UseOmikuji useOmikuji() {
     setOpacityLevel(0.0);
     setLoading(true);
     setError(false);
-    final generatedFortune = OmikujiUtil.generateFortune();
-    final generatedAcademiaAdvice = OmikujiUtil.generateAdvice(
+    final generatedFortune = OmikujiGenerator.generateFortune();
+    final generatedAcademiaAdvice = OmikujiGenerator.generateAdvice(
       generatedFortune,
     );
-    final generatedBusinessAdvice = OmikujiUtil.generateAdvice(
+    final generatedBusinessAdvice = OmikujiGenerator.generateAdvice(
       generatedFortune,
     );
-    final generatedLoveAdvice = OmikujiUtil.generateAdvice(
+    final generatedLoveAdvice = OmikujiGenerator.generateAdvice(
       generatedFortune,
     );
     String generatedSubTitle = '';
     String generatedMessage = '';
     try {
-      generatedSubTitle = await OmikujiUtil.generateSubTitle();
-      generatedMessage = await OmikujiUtil.generateMessage(
+      generatedSubTitle = await OmikujiGenerator.generateSubTitle();
+      generatedMessage = await OmikujiGenerator.generateMessage(
         fortuneText: generatedFortune.text,
         subTitle: generatedSubTitle,
         academicMessage: generatedAcademiaAdvice,
