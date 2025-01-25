@@ -1,60 +1,57 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:omikuji_app/components/loading_view.dart';
 import 'package:omikuji_app/components/network_error_view.dart';
 import 'package:omikuji_app/components/result_view.dart';
 import 'package:omikuji_app/hooks/use_omikuji.dart';
+import 'package:omikuji_app/pages/settings_page.dart';
+import 'package:omikuji_app/providers/settings_notifier.dart';
+import 'package:omikuji_app/utils/bgm_player.dart';
+import 'package:omikuji_app/utils/se_player.dart';
 
 import '../components/web_initial_alert_dialog.dart';
 import '../constants/sound_path.dart';
 
-class OmikujiPage extends HookWidget {
-  OmikujiPage({Key? key}) : super(key: key);
+class OmikujiPage extends HookConsumerWidget {
+  const OmikujiPage({Key? key}) : super(key: key);
 
-  final _bgmPlayer = AudioPlayer();
-  final _sePlayer = AudioPlayer();
-
-  Future<void> _playSe(String soundPath, bool isMute) async {
-    if (isMute) return;
-    await _sePlayer.stop();
-    await _sePlayer.play(AssetSource(soundPath));
-  }
-
-  Future<void> _playBgm(bool isMute) async {
-    if (isMute) return;
-    await _bgmPlayer.stop();
-    await _bgmPlayer.play(AssetSource(SoundPath.bgm));
-  }
-
-  void _onPressedSwitchMute(UseOmikuji useOmikuji) {
-    useOmikuji.switchMute();
-    final isMute = !useOmikuji.state.isMute;
-    if (isMute) {
-      _bgmPlayer.stop();
-      _sePlayer.stop();
-      return;
-    }
-    _playBgm(isMute);
-    _playSe(SoundPath.tap, isMute);
-  }
-
-  Future<void> _onPressedStartButton(BuildContext context, bool isMute) async {
-    await _playSe(SoundPath.tap, isMute);
+  Future<void> _onPressedStartButton(
+      BuildContext context, bool isPlayingSE) async {
+    await SEPlayer.play(SoundPath.tap, isPlayingSE);
     if (!context.mounted) return;
     Navigator.pop(context);
   }
 
-  Future<void> _onPressedDrawOmikuji(UseOmikuji useOmikuji) async {
-    await _playSe(SoundPath.tap, useOmikuji.state.isMute);
-    final generatedFortune = await useOmikuji.drawOmikuji();
-    await _playSe(generatedFortune.soundPath, useOmikuji.state.isMute);
+  Future<void> _onPressedSettings(
+    BuildContext context,
+    bool isPlayingSE,
+  ) async {
+    await SEPlayer.play(SoundPath.tap, isPlayingSE);
+    if (!context.mounted) return;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => const SettingsPage(),
+      ),
+    );
   }
 
-  Future<void> _initialize(BuildContext context, bool isMute) async {
-    await _bgmPlayer.setReleaseMode(ReleaseMode.loop);
-    await _bgmPlayer.setVolume(0.15);
+  Future<void> _onPressedDrawOmikuji(
+    UseOmikuji useOmikuji,
+    bool isPlayingSE,
+  ) async {
+    await SEPlayer.play(SoundPath.tap, isPlayingSE);
+    final generatedFortune = await useOmikuji.drawOmikuji();
+    await SEPlayer.play(generatedFortune.soundPath, isPlayingSE);
+  }
+
+  Future<void> _initialize(
+    BuildContext context,
+    bool isPlayingBGM,
+    isPlayingSE,
+  ) async {
     Future(() async {
       if (kIsWeb) {
         if (!context.mounted) return;
@@ -62,25 +59,30 @@ class OmikujiPage extends HookWidget {
           context: context,
           barrierDismissible: false,
           builder: (context) => WebInitialAlertDialog(
-            onPressed: () => _onPressedStartButton(context, isMute),
+            onPressed: () => _onPressedStartButton(context, isPlayingSE),
           ),
         );
       }
-      await _playBgm(isMute);
+      await BGMPlayer.play(isPlayingBGM);
     });
   }
 
   void _dispose() {
-    _bgmPlayer.dispose();
-    _sePlayer.dispose();
+    BGMPlayer.dispose();
+    SEPlayer.dispose();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settingsState = ref.read(settingsNotifierProvider);
     final useState = useOmikuji();
     final state = useState.state;
     useEffect(() {
-      _initialize(context, state.isMute);
+      _initialize(
+        context,
+        settingsState.isPlayingBGM,
+        settingsState.isPlayingSE,
+      );
       return _dispose;
     }, []);
     return SelectionArea(
@@ -89,10 +91,11 @@ class OmikujiPage extends HookWidget {
           title: const Text('へんなおみくじ'),
           actions: [
             IconButton(
-              onPressed: () => _onPressedSwitchMute(useState),
-              icon: state.isMute
-                  ? const Icon(Icons.volume_off_outlined)
-                  : const Icon(Icons.volume_up_outlined),
+              onPressed: () => _onPressedSettings(
+                context,
+                settingsState.isPlayingSE,
+              ),
+              icon: const Icon(Icons.settings_outlined),
             ),
           ],
         ),
@@ -114,7 +117,10 @@ class OmikujiPage extends HookWidget {
                 SizedBox(
                   height: 48.0,
                   child: ElevatedButton(
-                    onPressed: () => _onPressedDrawOmikuji(useState),
+                    onPressed: () => _onPressedDrawOmikuji(
+                      useState,
+                      settingsState.isPlayingSE,
+                    ),
                     child: Text(state.isFirstDrawing ? 'おみくじを引く' : 'もう一度引いちゃう'),
                   ),
                 ),
