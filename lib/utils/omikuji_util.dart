@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:english_words/english_words.dart';
-import 'package:translator/translator.dart';
+import 'package:omikuji_app/utils/translator.dart';
 
 import '../models/fortune.dart';
 
@@ -34,13 +34,17 @@ class OmikujiUtil {
     }
   }
 
+  /// ランダムなメッセージを生成する。
+  ///
+  /// ランダムな英単語のペアを日本語に翻訳して変な日本語を生成することにより、
+  /// 変な日本語を生成している。
   static Future<String> generateMessage() async {
-    final translator = GoogleTranslator();
-    final Translation translation;
-    // スネークケースで英単語のペアを生成（アンダーバーを半角スペースに置き換える）
-    final wordPair = WordPair.random().asSnakeCase.replaceAll('_', ' ');
-    translation = await translator.translate(wordPair, from: 'en', to: 'ja');
-    return translation.toString();
+    // ランダムな英単語のペアを生成（アンダーバーで区切られているので半角スペースに置き換え）
+    final englishWordPair = WordPair.random().asSnakeCase.replaceAll('_', ' ');
+    final japaneseMessage = await Translator.translateEnglishIntoJapanese(
+      englishWordPair,
+    );
+    return japaneseMessage;
   }
 
   static String generateAdvice(Fortune fortune) {
