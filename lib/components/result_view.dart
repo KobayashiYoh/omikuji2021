@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:omikuji_app/models/omikuji_state.dart';
 
-import 'empty_result_view.dart';
-
 class ResultView extends StatelessWidget {
   const ResultView({Key? key, required this.state}) : super(key: key);
   final OmikujiState state;
 
   @override
   Widget build(BuildContext context) {
-    if (state.omikuji == null) {
-      return const EmptyResultView();
-    }
     final omikuji = state.omikuji!;
     return AnimatedOpacity(
       opacity: state.opacityLevel,

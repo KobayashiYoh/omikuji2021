@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:omikuji_app/components/empty_result_view.dart';
 import 'package:omikuji_app/components/loading_view.dart';
 import 'package:omikuji_app/components/network_error_view.dart';
 import 'package:omikuji_app/components/result_view.dart';
@@ -102,29 +103,41 @@ class OmikujiPage extends HookConsumerWidget {
         body: SafeArea(
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                const Spacer(),
-                Center(
-                  child: state.isLoading
-                      ? const LoadingView()
-                      : state.hasError
-                          ? const NetworkErrorView()
-                          : ResultView(state: state),
-                ),
-                const Spacer(),
-                SizedBox(
-                  height: 48.0,
-                  child: ElevatedButton(
-                    onPressed: () => _onPressedDrawOmikuji(
-                      useState,
-                      settingsState.isPlayingSE,
-                    ),
-                    child: Text(state.isFirstDrawing ? 'おみくじを引く' : 'もう一度引いちゃう'),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      state.isLoading
+                          ? const LoadingView()
+                          : state.hasError
+                              ? const NetworkErrorView()
+                              : state.omikuji == null
+                                  ? const EmptyResultView()
+                                  : ResultView(state: state),
+                      const SizedBox(height: 80.0),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 32.0),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Spacer(),
+                    SizedBox(
+                      height: 48.0,
+                      child: ElevatedButton(
+                        onPressed: () => _onPressedDrawOmikuji(
+                          useState,
+                          settingsState.isPlayingSE,
+                        ),
+                        child: Text(
+                            state.isFirstDrawing ? 'おみくじを引く' : 'もう一度引いちゃう'),
+                      ),
+                    ),
+                    const SizedBox(height: 32.0),
+                  ],
+                ),
               ],
             ),
           ),
