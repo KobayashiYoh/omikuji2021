@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:omikuji_app/constants/sound_path.dart';
 import 'package:omikuji_app/providers/settings_notifier.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../constants/font_families.dart';
 import '../utils/bgm_player.dart';
@@ -36,9 +38,20 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     await _notifier.setIsPlayingSE(isPlayingSE);
   }
 
+  Future<void> _onPressedPrivacyPolicy(BuildContext context) async {
+    final url = dotenv.env['PRIVACY_POLICY_URL'];
+    if (url == null) {
+      throw Exception('dotenv.env[\'PRIVACY_POLICY_URL\'] is null.');
+    }
+    final uri = Uri.parse(url);
+    if (!await launchUrl(uri)) {
+      throw Exception('Could not launch $uri');
+    }
+  }
+
   Future<void> _onTapBack(bool isPlayingSE) async {
     await SEPlayer.play(SoundPath.tap, isPlayingSE);
-    if (!context.mounted) return;
+    if (!mounted) return;
     Navigator.pop(context);
   }
 
@@ -79,6 +92,13 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     initialValue: state.isPlayingSE,
                     title: const Text(
                       '効果音',
+                      style: TextStyle(fontFamily: FontFamilies.yujiSyuku),
+                    ),
+                  ),
+                  SettingsTile.navigation(
+                    onPressed: _onPressedPrivacyPolicy,
+                    title: const Text(
+                      'プライバシーポリシー',
                       style: TextStyle(fontFamily: FontFamilies.yujiSyuku),
                     ),
                   ),
