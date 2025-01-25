@@ -22,4 +22,7 @@ ThemeData appTheme = ThemeData(
       ),
     ),
   ),
+  switchTheme: SwitchThemeData(
+    trackColor: WidgetStatePropertyAll(Colors.indigo[900]),
+  ),
 );
