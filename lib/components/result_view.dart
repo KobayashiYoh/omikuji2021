@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:omikuji_app/models/omikuji_state.dart';
 
+import 'empty_result_view.dart';
+
 class ResultView extends StatelessWidget {
   const ResultView({Key? key, required this.state}) : super(key: key);
   final OmikujiState state;
@@ -8,7 +10,7 @@ class ResultView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (state.omikuji == null) {
-      return const _EmptyResultView();
+      return const EmptyResultView();
     }
     final omikuji = state.omikuji!;
     return AnimatedOpacity(
@@ -39,27 +41,6 @@ class ResultView extends StatelessWidget {
           Text(omikuji.message),
         ],
       ),
-    );
-  }
-}
-
-class _EmptyResultView extends StatelessWidget {
-  const _EmptyResultView();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        Text(
-          'ボタンをタップして\nへんなおみくじを引く',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 18.0,
-          ),
-        ),
-        SizedBox(height: 8.0),
-        Icon(Icons.arrow_downward),
-      ],
     );
   }
 }
