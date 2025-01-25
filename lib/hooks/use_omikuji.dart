@@ -1,6 +1,5 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:omikuji_app/models/omikuji_state.dart';
-import 'package:omikuji_app/repository/settings_repository.dart';
 import 'package:omikuji_app/utils/omikuji_util.dart';
 
 import '../models/fortune.dart';
@@ -8,20 +7,15 @@ import '../models/fortune.dart';
 class UseOmikuji {
   UseOmikuji({
     required this.state,
-    required this.switchMute,
     required this.drawOmikuji,
   });
 
   final OmikujiState state;
-  final void Function() switchMute;
   final Future<Fortune> Function() drawOmikuji;
 }
 
 UseOmikuji useOmikuji() {
-  final initialState = initialOmikujiState.copyWith(
-    isMute: SettingsRepository.instance.readIsMute(),
-  );
-  final state = useState<OmikujiState>(initialState);
+  final state = useState<OmikujiState>(initialOmikujiState);
 
   void setLoading(bool isLoading) {
     state.value = state.value.copyWith(isLoading: isLoading);
@@ -71,15 +65,6 @@ UseOmikuji useOmikuji() {
 
   void setOpacityLevel(double opacityLevel) {
     state.value = state.value.copyWith(opacityLevel: opacityLevel);
-  }
-
-  void setMute(bool isMute) {
-    state.value = state.value.copyWith(isMute: isMute);
-  }
-
-  void switchMute() {
-    setMute(!state.value.isMute);
-    SettingsRepository.instance.writeIsMute(state.value.isMute);
   }
 
   void generateKanjiYearText() {
@@ -132,7 +117,6 @@ UseOmikuji useOmikuji() {
 
   return UseOmikuji(
     state: state.value,
-    switchMute: switchMute,
     drawOmikuji: drawOmikuji,
   );
 }

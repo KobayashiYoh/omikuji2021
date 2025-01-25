@@ -4,7 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class _SettingsKeys {
   _SettingsKeys._();
 
-  static const isMute = 'is_mute';
+  static const isPlayingBGM = 'is_playing_bgm';
+  static const isPlayingSE = 'is_playing_se';
 }
 
 /// 設定情報をSharedPreferenceから入出力するためのRepository。
@@ -25,11 +26,19 @@ class SettingsRepository {
     }
   }
 
-  Future<void> writeIsMute(bool isMute) async {
-    await instance._prefs.setBool(_SettingsKeys.isMute, isMute);
+  Future<void> writeIsPlayingBGM(bool isPlayingBGM) async {
+    await instance._prefs.setBool(_SettingsKeys.isPlayingBGM, isPlayingBGM);
   }
 
-  bool readIsMute() {
-    return instance._prefs.getBool(_SettingsKeys.isMute) ?? false;
+  bool readIsPlayingBGM() {
+    return instance._prefs.getBool(_SettingsKeys.isPlayingBGM) ?? true;
+  }
+
+  Future<void> writeIsPlayingSE(bool isPlayingSE) async {
+    await instance._prefs.setBool(_SettingsKeys.isPlayingSE, isPlayingSE);
+  }
+
+  bool readIsPlayingSE() {
+    return instance._prefs.getBool(_SettingsKeys.isPlayingSE) ?? true;
   }
 }
