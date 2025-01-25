@@ -1,8 +1,10 @@
+/// 生成AIでコンテンツを生成する際に使用するプロンプトを定義したクラス。
 class Prompts {
   Prompts._();
 
   static const _maxTextCount = 160;
 
+  /// 共通で使用するプロンプト。
   static const common = '''
     ## 命令
     ユーモアを交えつつ、誰も不快にならないアドバイスを考えて下さい。
