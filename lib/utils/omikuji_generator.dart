@@ -81,7 +81,7 @@ class OmikujiGenerator {
       商売：$businessMessage
       恋愛：$loveMessage
     ''';
-    final message = await GeminiClient.instance.generateMessageByGemini(
+    final message = await GeminiClient.instance.generateMessage(
       inputText: omikujiOverviewText,
     );
     return message.replaceAll('\n', ' ');

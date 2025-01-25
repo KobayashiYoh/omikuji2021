@@ -12,7 +12,7 @@ class GeminiClient {
     apiKey: dotenv.env['GEMINI_API_KEY']!,
   );
 
-  Future<String> generateMessageByGemini({required String inputText}) async {
+  Future<String> generateMessage({required String inputText}) async {
     String message = '';
     final content = [
       Content.text(Prompts.common),
