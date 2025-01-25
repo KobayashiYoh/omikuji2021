@@ -1,6 +1,7 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:omikuji_app/models/omikuji.dart';
 import 'package:omikuji_app/models/omikuji_state.dart';
-import 'package:omikuji_app/utils/omikuji_util.dart';
+import 'package:omikuji_app/utils/omikuji_generator.dart';
 
 import '../models/fortune.dart';
 
@@ -29,90 +30,61 @@ UseOmikuji useOmikuji() {
     state.value = state.value.copyWith(isFirstDrawing: isFirstDrawing);
   }
 
-  void setFortune(Fortune fortune) {
-    state.value = state.value.copyWith(
-      omikuji: state.value.omikuji.copyWith(fortune: fortune),
-    );
-  }
-
-  void setMessage(String message) {
-    state.value = state.value.copyWith(
-      omikuji: state.value.omikuji.copyWith(message: message),
-    );
-  }
-
-  void setAcademiaAdvice(String academiaAdvice) {
-    state.value = state.value.copyWith(
-      omikuji: state.value.omikuji.copyWith(academiaAdvice: academiaAdvice),
-    );
-  }
-
-  void setBusinessAdvice(String businessAdvice) {
-    state.value = state.value.copyWith(
-      omikuji: state.value.omikuji.copyWith(businessAdvice: businessAdvice),
-    );
-  }
-
-  void setLoveAdvice(String loveAdvice) {
-    state.value = state.value.copyWith(
-      omikuji: state.value.omikuji.copyWith(loveAdvice: loveAdvice),
-    );
-  }
-
-  void setKanjiYearText(String kanjiYearText) {
-    state.value = state.value.copyWith(kanjiYearText: kanjiYearText);
+  void setOmikuji(Omikuji omikuji) {
+    state.value = state.value.copyWith(omikuji: omikuji);
   }
 
   void setOpacityLevel(double opacityLevel) {
     state.value = state.value.copyWith(opacityLevel: opacityLevel);
   }
 
-  void generateKanjiYearText() {
-    final generatedKanjiYearText = OmikujiUtil.generateKanjiYearText();
-    setKanjiYearText(generatedKanjiYearText);
-  }
-
-  Fortune generateFortune() {
-    final generatedFortune = OmikujiUtil.generateFortune();
-    setFortune(generatedFortune);
-    return generatedFortune;
-  }
-
-  Future<void> generateMessage() async {
-    final generatedMessage = await OmikujiUtil.generateMessage();
-    setMessage(generatedMessage);
-  }
-
-  void generateAdvice(Fortune fortune) {
-    final generatedAcademiaAdvice = OmikujiUtil.generateAdvice(fortune);
-    setAcademiaAdvice(generatedAcademiaAdvice);
-    final generatedBusinessAdvice = OmikujiUtil.generateAdvice(fortune);
-    setBusinessAdvice(generatedBusinessAdvice);
-    final generatedLoveAdvice = OmikujiUtil.generateAdvice(fortune);
-    setLoveAdvice(generatedLoveAdvice);
-  }
-
   Future<Fortune> drawOmikuji() async {
     setOpacityLevel(0.0);
-    final fortune = generateFortune();
-    generateKanjiYearText();
-    generateAdvice(fortune);
     setLoading(true);
     setError(false);
+    final generatedFortune = OmikujiGenerator.generateFortune();
+    final generatedAcademiaAdvice = OmikujiGenerator.generateAdvice(
+      generatedFortune,
+    );
+    final generatedBusinessAdvice = OmikujiGenerator.generateAdvice(
+      generatedFortune,
+    );
+    final generatedLoveAdvice = OmikujiGenerator.generateAdvice(
+      generatedFortune,
+    );
+    String generatedSubTitle = '';
+    String generatedMessage = '';
     try {
-      await generateMessage();
+      generatedSubTitle = await OmikujiGenerator.generateSubTitle();
+      generatedMessage = await OmikujiGenerator.generateMessage(
+        fortuneText: generatedFortune.text,
+        subTitle: generatedSubTitle,
+        academicMessage: generatedAcademiaAdvice,
+        businessMessage: generatedBusinessAdvice,
+        loveMessage: generatedLoveAdvice,
+      );
     } catch (e) {
+      print(e);
       setError(true);
     } finally {
       setLoading(false);
     }
+    final omikuji = Omikuji(
+      fortune: generatedFortune,
+      subTitle: generatedSubTitle,
+      academiaAdvice: generatedAcademiaAdvice,
+      businessAdvice: generatedBusinessAdvice,
+      loveAdvice: generatedLoveAdvice,
+      message: generatedMessage,
+    );
+    setOmikuji(omikuji);
     await Future.delayed(const Duration(milliseconds: 500));
     setOpacityLevel(1.0);
     await Future.delayed(const Duration(milliseconds: 500));
     if (state.value.isFirstDrawing) {
       setFirstDrawing(false);
     }
-    return state.value.omikuji.fortune ?? Fortune.misprint;
+    return state.value.omikuji?.fortune ?? Fortune.misprint;
   }
 
   return UseOmikuji(

@@ -7,18 +7,11 @@ part 'omikuji.freezed.dart';
 @freezed
 class Omikuji with _$Omikuji {
   const factory Omikuji({
-    required Fortune? fortune,
-    required String message,
+    required Fortune fortune,
+    required String subTitle,
     required String academiaAdvice,
     required String businessAdvice,
     required String loveAdvice,
+    required String message,
   }) = _Omikuji;
 }
-
-const Omikuji initialOmikuji = Omikuji(
-  fortune: null,
-  message: '',
-  academiaAdvice: '',
-  businessAdvice: '',
-  loveAdvice: '',
-);

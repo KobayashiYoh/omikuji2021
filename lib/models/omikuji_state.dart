@@ -9,8 +9,7 @@ class OmikujiState with _$OmikujiState {
     required bool isLoading,
     required bool hasError,
     required bool isFirstDrawing,
-    required Omikuji omikuji,
-    required String kanjiYearText,
+    required Omikuji? omikuji,
     required double opacityLevel,
   }) = _OmikujiState;
 }
@@ -19,11 +18,10 @@ extension OmikujiStateExtention on OmikujiState {
   int get animationDurationSeconds => opacityLevel == 0 ? 0 : 2;
 }
 
-const OmikujiState initialOmikujiState = OmikujiState(
+OmikujiState initialOmikujiState = const OmikujiState(
   isLoading: false,
   hasError: false,
   isFirstDrawing: true,
-  omikuji: initialOmikuji,
-  kanjiYearText: '',
+  omikuji: null,
   opacityLevel: 0.0,
 );
