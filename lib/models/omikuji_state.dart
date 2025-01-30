@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:omikuji_app/models/omikuji.dart';
 
 part 'omikuji_state.freezed.dart';
@@ -11,6 +12,7 @@ class OmikujiState with _$OmikujiState {
     required bool isFirstDrawing,
     required Omikuji? omikuji,
     required double opacityLevel,
+    required BannerAd? bannerAd,
   }) = _OmikujiState;
 }
 
@@ -24,4 +26,5 @@ OmikujiState initialOmikujiState = const OmikujiState(
   isFirstDrawing: true,
   omikuji: null,
   opacityLevel: 0.0,
+  bannerAd: null,
 );

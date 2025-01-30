@@ -1,4 +1,5 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:omikuji_app/models/omikuji.dart';
 import 'package:omikuji_app/models/omikuji_state.dart';
 import 'package:omikuji_app/utils/omikuji_generator.dart';
@@ -9,10 +10,12 @@ class UseOmikuji {
   UseOmikuji({
     required this.state,
     required this.drawOmikuji,
+    required this.setBannerAd,
   });
 
   final OmikujiState state;
   final Future<Fortune> Function() drawOmikuji;
+  final void Function(Ad ad) setBannerAd;
 }
 
 UseOmikuji useOmikuji() {
@@ -36,6 +39,10 @@ UseOmikuji useOmikuji() {
 
   void setOpacityLevel(double opacityLevel) {
     state.value = state.value.copyWith(opacityLevel: opacityLevel);
+  }
+
+  void setBannerAd(Ad ad) {
+    state.value = state.value.copyWith(bannerAd: ad as BannerAd);
   }
 
   Future<Fortune> drawOmikuji() async {
@@ -90,6 +97,7 @@ UseOmikuji useOmikuji() {
   return UseOmikuji(
     state: state.value,
     drawOmikuji: drawOmikuji,
+    setBannerAd: setBannerAd,
   );
 }
 
