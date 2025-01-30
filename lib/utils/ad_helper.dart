@@ -6,9 +6,6 @@ import 'package:omikuji_app/extensions/build_context_extension.dart';
 class AdHelper {
   AdHelper._();
 
-  static get _env => const String.fromEnvironment('ENV', defaultValue: 'dev');
-  static bool get _isDev => _env == 'dev';
-
   /// Ad Unit IDを取得する。
   ///
   /// OSごと、環境ごとにそれぞれ異なるAd Unit IDを取得する。
