@@ -1,10 +1,33 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:omikuji_app/extensions/build_context_extension.dart';
 
 /// 広告に関するHelperクラス。
 class AdHelper {
   AdHelper._();
+
+  /// バナー広告の読み込みに失敗した際に実行する共通のコールバック関数。
+  static void _onAdFailedToLoad(ad, err) {
+    debugPrint('Failed to load a banner ad: ${err.message}');
+    ad.dispose();
+  }
+
+  /// バナー広告の読み込みを行う共通の関数。
+  static Future<void> loadBannerAd({
+    required String adUnitId,
+    required void Function(Ad)? onAdLoaded,
+  }) async {
+    await BannerAd(
+      adUnitId: adUnitId,
+      request: const AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        onAdLoaded: onAdLoaded,
+        onAdFailedToLoad: _onAdFailedToLoad,
+      ),
+    ).load();
+  }
 
   /// Ad Unit IDを取得する。
   ///
@@ -47,11 +70,5 @@ class AdHelper {
       androidKey: 'ANDROID_OMIKUJI_PAGE_BANNER_AD_UNIT_ID',
       iosKey: 'IOS_OMIKUJI_PAGE_BANNER_AD_UNIT_ID',
     );
-  }
-
-  /// バナー広告をロードする際に実行する共通のコールバック関数。
-  static void onAdFailedToLoad(ad, err) {
-    debugPrint('Failed to load a banner ad: ${err.message}');
-    ad.dispose();
   }
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:omikuji_app/components/banner_ad_widget.dart';
 import 'package:omikuji_app/constants/sound_path.dart';
+import 'package:omikuji_app/extensions/build_context_extension.dart';
 import 'package:omikuji_app/providers/settings_notifier.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -63,15 +63,12 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     super.initState();
     Future(() async {
       final notifier = ref.read(settingsNotifierProvider.notifier);
-      await BannerAd(
-        adUnitId: AdHelper.omikujiPageBannerAdUnitId(context),
-        request: const AdRequest(),
-        size: AdSize.banner,
-        listener: BannerAdListener(
-          onAdLoaded: notifier.setBannerAd,
-          onAdFailedToLoad: AdHelper.onAdFailedToLoad,
-        ),
-      ).load();
+      if (!mounted) return;
+      if (!context.isIOS && !context.isAndroid) return;
+      await AdHelper.loadBannerAd(
+        adUnitId: AdHelper.settingsPageBannerAdUnitId(context),
+        onAdLoaded: notifier.setBannerAd,
+      );
     });
   }
 

@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:omikuji_app/components/empty_result_view.dart';
 import 'package:omikuji_app/components/loading_view.dart';
@@ -70,15 +69,10 @@ class OmikujiPage extends HookConsumerWidget {
         ),
       );
     } else if (context.isAndroid || context.isIOS) {
-      await BannerAd(
+      await AdHelper.loadBannerAd(
         adUnitId: AdHelper.omikujiPageBannerAdUnitId(context),
-        request: const AdRequest(),
-        size: AdSize.banner,
-        listener: BannerAdListener(
-          onAdLoaded: useOmikuji.setBannerAd,
-          onAdFailedToLoad: AdHelper.onAdFailedToLoad,
-        ),
-      ).load();
+        onAdLoaded: useOmikuji.setBannerAd,
+      );
     }
     await BGMPlayer.play(isPlayingBGM);
   }
