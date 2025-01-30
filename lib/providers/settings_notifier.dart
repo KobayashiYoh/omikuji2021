@@ -1,3 +1,4 @@
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:omikuji_app/repository/settings_repository.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -49,5 +50,9 @@ class SettingsNotifier extends _$SettingsNotifier {
   Future<void> setIsPlayingSE(bool isPlayingSE) async {
     state = state.copyWith(isPlayingSE: !state.isPlayingSE);
     await SettingsRepository.instance.writeIsPlayingSE(isPlayingSE);
+  }
+
+  void setBannerAd(Ad ad) {
+    state = state.copyWith(bannerAd: ad as BannerAd);
   }
 }

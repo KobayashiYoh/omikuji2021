@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:omikuji_app/components/banner_ad_widget.dart';
 import 'package:omikuji_app/constants/sound_path.dart';
 import 'package:omikuji_app/providers/settings_notifier.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../constants/font_families.dart';
+import '../utils/ad_helper.dart';
 import '../utils/bgm_player.dart';
 import '../utils/se_player.dart';
 
@@ -53,6 +56,23 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     await SEPlayer.play(SoundPath.tap, isPlayingSE);
     if (!mounted) return;
     Navigator.pop(context);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Future(() async {
+      final notifier = ref.read(settingsNotifierProvider.notifier);
+      await BannerAd(
+        adUnitId: AdHelper.omikujiPageBannerAdUnitId(context),
+        request: const AdRequest(),
+        size: AdSize.banner,
+        listener: BannerAdListener(
+          onAdLoaded: notifier.setBannerAd,
+          onAdFailedToLoad: AdHelper.onAdFailedToLoad,
+        ),
+      ).load();
+    });
   }
 
   @override
@@ -121,6 +141,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               ),
             ],
           ),
+          BannerAdWidget(bannerAd: state.bannerAd),
         ],
       ),
     );
