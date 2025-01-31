@@ -6,20 +6,25 @@ import 'package:omikuji_app/components/empty_result_view.dart';
 import 'package:omikuji_app/components/loading_view.dart';
 import 'package:omikuji_app/components/network_error_view.dart';
 import 'package:omikuji_app/components/result_view.dart';
+import 'package:omikuji_app/extensions/build_context_extension.dart';
 import 'package:omikuji_app/hooks/use_omikuji.dart';
 import 'package:omikuji_app/pages/settings_page.dart';
 import 'package:omikuji_app/providers/settings_notifier.dart';
 import 'package:omikuji_app/utils/bgm_player.dart';
 import 'package:omikuji_app/utils/se_player.dart';
 
+import '../components/banner_ad_widget.dart';
 import '../components/web_initial_alert_dialog.dart';
 import '../constants/sound_path.dart';
+import '../utils/ad_helper.dart';
 
 class OmikujiPage extends HookConsumerWidget {
   const OmikujiPage({Key? key}) : super(key: key);
 
   Future<void> _onPressedStartButton(
-      BuildContext context, bool isPlayingSE) async {
+    BuildContext context,
+    bool isPlayingSE,
+  ) async {
     await SEPlayer.play(SoundPath.tap, isPlayingSE);
     if (!context.mounted) return;
     Navigator.pop(context);
@@ -48,24 +53,28 @@ class OmikujiPage extends HookConsumerWidget {
     await SEPlayer.play(generatedFortune.soundPath, isPlayingSE);
   }
 
-  Future<void> _initialize(
-    BuildContext context,
-    bool isPlayingBGM,
-    isPlayingSE,
-  ) async {
-    Future(() async {
-      if (kIsWeb) {
-        if (!context.mounted) return;
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) => WebInitialAlertDialog(
-            onPressed: () => _onPressedStartButton(context, isPlayingSE),
-          ),
-        );
-      }
-      await BGMPlayer.play(isPlayingBGM);
-    });
+  Future<void> _initialize({
+    required BuildContext context,
+    required UseOmikuji useOmikuji,
+    required bool isPlayingBGM,
+    required isPlayingSE,
+  }) async {
+    if (!context.mounted) return;
+    if (kIsWeb) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => WebInitialAlertDialog(
+          onPressed: () => _onPressedStartButton(context, isPlayingSE),
+        ),
+      );
+    } else if (context.isAndroid || context.isIOS) {
+      await AdHelper.loadBannerAd(
+        adUnitId: AdHelper.omikujiPageBannerAdUnitId(context),
+        onAdLoaded: useOmikuji.setBannerAd,
+      );
+    }
+    await BGMPlayer.play(isPlayingBGM);
   }
 
   void _dispose() {
@@ -79,11 +88,14 @@ class OmikujiPage extends HookConsumerWidget {
     final useState = useOmikuji();
     final state = useState.state;
     useEffect(() {
-      _initialize(
-        context,
-        settingsState.isPlayingBGM,
-        settingsState.isPlayingSE,
-      );
+      Future(() async {
+        await _initialize(
+          context: context,
+          useOmikuji: useState,
+          isPlayingBGM: settingsState.isPlayingBGM,
+          isPlayingSE: settingsState.isPlayingSE,
+        );
+      });
       return _dispose;
     }, []);
     return SelectionArea(
@@ -136,6 +148,7 @@ class OmikujiPage extends HookConsumerWidget {
                       ),
                     ),
                     const SizedBox(height: 32.0),
+                    BannerAdWidget(bannerAd: state.bannerAd)
                   ],
                 ),
               ],
